@@ -7,3 +7,5 @@
 ### Changed
 - Site-wide brand palette migrated from red (#c9222a) to deep navy (#1a2540) with military gold accents (#d4af37), per the 2026 redesign plan.
 - Django messages styling moved from inline template styles into the shared stylesheet.
+### Fixed
+- `startup.sh` now refuses to start unless `DJANGO_SETTINGS_MODULE=statzcorp.settings.production`, preventing silent fallback to local settings (`DEBUG=True`) when the Azure App Setting is missing.
