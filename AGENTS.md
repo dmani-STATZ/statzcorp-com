@@ -55,6 +55,7 @@ Observed in the current codebase — match these when editing:
 - **Duplicate assets:** Root `css/style.css` and `js/main.js` are byte-identical to the `static/` copies and are also tracked in git. Templates do **not** reference the root copies. Prefer editing `static/` only; do not diverge the duplicates without human direction.
 - **Admin:** Models registered in `apps/contact/admin.py` and `apps/surveys/admin.py`.
 - **Config:** `python-decouple` `config()` for secrets and env (`statzcorp/settings/base.py`).
+- **Database:** SQLite now (`django.db.backends.sqlite3`, default `db.sqlite3`). Plan to migrate to Microsoft SQL Server (MSSQL) later. Do not introduce PostgreSQL.
 - **New public page:** Add view in `apps/public/views.py`, route in `apps/public/urls.py`, template under `templates/public/`, styles in `static/css/style.css`, nav link in `templates/base.html` if discoverable.
 
 > Not yet established. Do not assume — confirm with Dion (IT & Manufacturing Operations) before acting: Python formatting/lint rules; whether to delete root `css/` / `js/` duplicates.
@@ -69,6 +70,8 @@ Observed in the current codebase — match these when editing:
 - Do not edit already-shipped migration files in place; add new migrations via `makemigrations`.
 - Do not invent test/lint/CI scripts or npm tooling that are not in the repo.
 - Do not add Tailwind, Bootstrap, or other CSS/UI frameworks; do not grow inline/`{% block extra_css %}` styles when the rule can live in `static/css/style.css`.
+- Do not introduce PostgreSQL or `psycopg*` packages. Database is SQLite now; MSSQL is the planned later target (see `requirements.txt` comments / `.env.example`).
+- Do not implement the MSSQL migration (or add `mssql-django` / `pyodbc` as required deps) unless the user asks.
 - Do not implement roadmap items from `rebuild_migration_plan.md` unless the user asks for that work.
 - Do not commit unless the user explicitly asks.
 
@@ -82,8 +85,8 @@ No `CONTRIBUTING.md`, commit hooks, or CI checks found. Only one commit on `main
 
 - **`DJANGO_SECRET_KEY` is required** even locally — `statzcorp/settings/base.py` calls `config('DJANGO_SECRET_KEY')` with no default; missing `.env` key crashes startup.
 - **Some templates still contain page-local `<style>` blocks** (e.g. `templates/contact/contact-us.html`, inline block in `templates/base.html`). Migrate those into `static/css/style.css` when touching those pages.
-- **`DB_SSLMODE` in `.env.example` is not wired in `base.py`.** Production Postgres SSL is applied only in `statzcorp/settings/production.py` via `OPTIONS={'sslmode': 'require'}` when engine is PostgreSQL.
 - **Survey GET may still load classified questions.** `survey_detail_view` fetches `survey.questions.all()` (default related manager). POST skips CUI/CTI/CDI; GET filtering is incomplete relative to the manager design (`apps/surveys/views.py` comment acknowledges this).
 - **Local media directory is absent.** `MEDIA_ROOT` is `BASE_DIR / 'media'` and `media/` is gitignored; directory not present on disk until created.
 - **Promo video is local-only.** `static/images/Team-Statz_Fine-Cut_02-16x9-.mp4` is ignored by `*.mp4` in `.gitignore`; templates may reference it but it will not be in git.
 - **GCCH / Azure comments vs live deploy.** Deployment target is documented in `.env.example`, `requirements.txt`, and `production.py` comments; no Azure pipeline or App Service config files exist in this repo yet.
+- **MSSQL not wired yet.** `.env.example` and `requirements.txt` only document the future MSSQL path; active engine is SQLite.

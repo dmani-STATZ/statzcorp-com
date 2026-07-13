@@ -12,10 +12,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# Azure database Flexible Server config (PostgreSQL)
-# Connection details are pulled via Decouple in base.py.
-# In production, make sure SSL is required:
-if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
-    DATABASES['default']['OPTIONS'] = {
-        'sslmode': 'require',
-    }
+# Database: SQLite is current (configured in base.py via DB_* / defaults).
+# Plan: migrate to Microsoft SQL Server (MSSQL) later — do not introduce PostgreSQL.
+# When switching to MSSQL, install mssql-django + pyodbc and set DB_ENGINE/OPTIONS
+# (ODBC driver, Encrypt, TrustServerCertificate, etc.) under human direction.

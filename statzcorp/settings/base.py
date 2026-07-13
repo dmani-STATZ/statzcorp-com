@@ -65,7 +65,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'statzcorp.wsgi.application'
 
 # ── Database ──────────────────────────────────────────────────────────────────
-# Default to SQLite for local dev; overridden in production.py
+# Current: SQLite (default). Planned later: Microsoft SQL Server (MSSQL).
+# Do not use PostgreSQL in this project.
 DATABASES = {
     'default': {
         'ENGINE':   config('DB_ENGINE',   default='django.db.backends.sqlite3'),

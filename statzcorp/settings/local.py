@@ -3,7 +3,7 @@ from .base import *
 # Local development settings
 DEBUG = True
 
-# SQLite local database is set in base.py by default if env vars aren't provided.
+# SQLite is the active database (defaults in base.py / .env).
 # You can override settings here specifically for local development.
 
 # Log emails to the console instead of trying to send them

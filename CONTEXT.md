@@ -51,6 +51,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 - Microsoft Bookings embeds
 - Content rewrites (NSN/FSC emphasis, condensed history, team group-photo approach, cert PDF downloads)
 - LinkedIn / video production program (mostly off-site)
+- Migrate database from SQLite to Microsoft SQL Server (MSSQL) — packages/settings only stubbed in comments
 
 **Legacy / non-Django leftovers:**
 
@@ -73,8 +74,9 @@ Browser
 
 **Data stores:**
 
-- Local default: SQLite via env defaults in `statzcorp/settings/base.py` (file `db.sqlite3` gitignored).
-- Production intent: PostgreSQL on Azure (GCCH host pattern `*.postgres.database.azure.us` in `.env.example`); SSL required in `statzcorp/settings/production.py`.
+- **Current:** SQLite via `statzcorp/settings/base.py` defaults / `.env.example` (`django.db.backends.sqlite3`, file `db.sqlite3`, gitignored).
+- **Planned later:** Microsoft SQL Server (MSSQL). Transition notes live in `.env.example` and commented deps in `requirements.txt` (`mssql-django`, `pyodbc`). Not configured yet.
+- **Not used:** PostgreSQL — removed from project guidance and deps (owner-stated).
 
 **Email:** Console backend forced in `statzcorp/settings/local.py`. Production uses SMTP settings from env (Office 365 host defaults in `base.py` / `.env.example`).
 
@@ -96,6 +98,7 @@ Browser
 | **JCP** | Joint Certification Program (DD Form 2345) — planned Resources page topic |
 | **Legacy static-site files** | `.gitignore` label for `php/`, `config/`, `composer.json` — not the active stack |
 | **Custom CSS stack** | Owner rule: style via `static/css/style.css` only — no Tailwind, no Bootstrap, no crispy-forms; minimize template-embedded CSS |
+| **SQLite to MSSQL** | Current DB is SQLite; planned production database is Microsoft SQL Server — not PostgreSQL |
 
 ## Known Issues / Tech Debt
 
@@ -107,7 +110,7 @@ Only items with a concrete source:
 4. **Survey detail GET vs classification.** `survey_detail_view` uses `survey.questions.all()`; POST skips classified questions, but GET does not filter via `public_objects` (`apps/surveys/views.py`).
 5. **Video asset not in git.** `*.mp4` ignored; commit message documents removing a large video from the initial commit.
 6. **No automated tests or CI.** Confirmed by absence of test modules and `.github/workflows`.
-7. **`DB_SSLMODE` env var documented but unused in `base.py`.** SSL for Postgres is hard-set only in `production.py`.
+7. **MSSQL migration not implemented.** Only documented as future in `.env.example` / `requirements.txt` comments.
 
 ## Stakeholders / Points of Contact
 
