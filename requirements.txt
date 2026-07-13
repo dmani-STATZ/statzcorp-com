@@ -2,6 +2,7 @@
 Django==5.2.*
 whitenoise[brotli]==6.9.*     # Serves static files; no CDN needed in GCCH
 python-decouple==3.8.*        # Pulls settings from .env / Azure App Settings
+django-storages[azure]>=1.14  # Azure Blob Storage for video/media uploads (GCCH)
 
 # ── Database ──────────────────────────────────────────────
 # Current: SQLite (built into Python / Django — no extra package).

@@ -46,27 +46,31 @@ python manage.py runserver
 
 Observed in the current codebase — match these when editing:
 
-- **Layout:** Django project package `statzcorp/`; apps under `apps/` (`public`, `contact`, `surveys`); project templates in `templates/`; served static assets in `static/` (`statzcorp/settings/base.py` `STATICFILES_DIRS`).
-- **URLs:** Each app sets `app_name`; root include in `statzcorp/urls.py`. Named routes like `public:index`, `public:resources`, `contact:contact_us`, `surveys:list`.
-- **Views:** `apps.public` uses `TemplateView`; `apps.contact` uses `FormView`; `apps.surveys` mixes `ListView` + FBV (`survey_detail_view`).
-- **Models:** App models in `apps/*/models.py`. Surveys use abstract `ClassifiedModel` + `public_objects` manager (`apps/surveys/models.py`).
+- **Layout:** Django project package `statzcorp/`; apps under `apps/` (`public`, `contact`, `surveys`, `videos`); project templates in `templates/`; served static assets in `static/` (`statzcorp/settings/base.py` `STATICFILES_DIRS`).
+- **URLs:** Each app sets `app_name`; root include in `statzcorp/urls.py`. Named routes like `public:index`, `public:resources`, `contact:contact_us`, `surveys:list`, `videos:detail`.
+- **Views:** `apps.public` uses `TemplateView`; `apps.contact` uses `FormView`; `apps.surveys` mixes `ListView` + FBV (`survey_detail_view`); `apps.videos` uses `DetailView` with `published_objects`.
+- **Models:** App models in `apps/*/models.py`. Surveys use abstract `ClassifiedModel` + `public_objects` manager (`apps/surveys/models.py`). Videos use `VideoAsset` + `published_objects` (`apps/videos/models.py`).
 - **Forms:** Contact uses `ModelForm` + honeypot field `website` (`apps/contact/forms.py`). Templates render fields manually with `{% csrf_token %}`. Style forms in `static/css/style.css`.
 - **CSS/JS (owner rule):** Custom CSS only. Active stylesheet/script are `static/css/style.css` and `static/js/main.js` (linked from `templates/base.html` via `{% static %}`). Put new styles in `static/css/style.css` (use existing `:root` variables: `--primary`, `--primary-dark`, `--accent`, `--navy`, etc. — `--red` / `--red-dark` no longer exist). Keep `<style>` blocks and inline styles in templates to a minimum — prefer classes in the shared CSS file. Fonts: Oswald + Open Sans via Google Fonts `@import` in `static/css/style.css`.
 - **No Tailwind. No Bootstrap. No crispy-forms.** Do not add Tailwind, Bootstrap CSS/JS, django-crispy-forms, utility-class frameworks, or CDN UI kits.
 - **Duplicate assets:** Root `css/style.css` and `js/main.js` are byte-identical to the `static/` copies and are also tracked in git. Templates do **not** reference the root copies. Prefer editing `static/` only; do not diverge the duplicates without human direction.
-- **Admin:** Models registered in `apps/contact/admin.py` and `apps/surveys/admin.py`.
+- **Admin:** Models registered in `apps/contact/admin.py`, `apps/surveys/admin.py`, and `apps/videos/admin.py`.
 - **Config:** `python-decouple` `config()` for secrets and env (`statzcorp/settings/base.py`).
 - **Database:** SQLite now (`django.db.backends.sqlite3`, default `db.sqlite3`). Plan to migrate to Microsoft SQL Server (MSSQL) later. Do not introduce PostgreSQL.
-- **New public page:** Add view in `apps/public/views.py`, route in `apps/public/urls.py`, template under `templates/public/`, styles in `static/css/style.css`, nav link in `templates/base.html` if discoverable.
+- **Media storage:** Default `FileSystemStorage`. When `AZURE_CONNECTION_STRING` is set, `STORAGES['default']` switches to `storages.backends.azure_storage.AzureStorage` (GCCH). Always use `FieldFile.url` / `.url` — never concatenate `MEDIA_URL` with paths by hand.
+- **New public page:** Add view in `apps/public/views.py`, route in `apps/public/urls.py`, template under `templates/public/`, styles in `static/css/style.css`, nav link in `templates/base.html` if discoverable. For shareable videos use `apps/videos/` instead.
 
 > Not yet established. Do not assume — confirm with Dion (IT & Manufacturing Operations) before acting: Python formatting/lint rules; whether to delete root `css/` / `js/` duplicates.
 
 ## Boundaries — Things Agents Must NOT Do
 
 - Do not commit `.env`, secrets, keys, or credentials (`.gitignore`, `.env.example` warnings).
-- Do not commit large video files (`*.mp4` etc. gitignored; initial commit message: “Initial commit without large video file.”).
+- Do not commit, log, or print `AZURE_CONNECTION_STRING` (or any Azure storage secrets). Local development without that variable must keep working via `FileSystemStorage` — do not require Azure credentials for `runserver` / migrate.
+- Do not “fix” the Azure `media` container by disabling blob-level anonymous read without explicit human instruction — public blob read (not full container listing) is an intentional GCCH-compliant setup for marketing video delivery.
+- Do not commit large video files (`*.mp4` etc. gitignored; initial commit message: “Initial commit without large video file.”). Upload marketing videos through Django admin (`VideoAsset`) instead.
 - Do not revive or extend ignored legacy PHP mail stack for new features: `php/`, `config/`, `composer.json` are gitignored under “Legacy static-site files” (`.gitignore`). They may exist only locally.
 - Do not expose CUI / CTI / CDI on public survey routes. Public list/detail must use `Survey.public_objects` and must not submit/display classified questions (`apps/surveys/models.py`, `apps/surveys/views.py`).
+- Do not expose unpublished videos on public routes — use `VideoAsset.published_objects` (`apps/videos/views.py`).
 - Do not weaken `statzcorp/settings/production.py` SSL/HSTS/secure-cookie settings without explicit human sign-off.
 - Do not edit already-shipped migration files in place; add new migrations via `makemigrations`.
 - Do not invent test/lint/CI scripts or npm tooling that are not in the repo.
@@ -87,8 +91,9 @@ No `CONTRIBUTING.md`, commit hooks, or CI checks found. Only one commit on `main
 - **`DJANGO_SECRET_KEY` is required** even locally — `statzcorp/settings/base.py` calls `config('DJANGO_SECRET_KEY')` with no default; missing `.env` key crashes startup.
 - **Some templates still contain page-local `<style>` blocks** (e.g. `templates/contact/contact-us.html`, `templates/public/accreditations.html`). Django messages styles were moved out of `templates/base.html` into `static/css/style.css`. Migrate remaining template CSS when touching those pages.
 - **Survey GET may still load classified questions.** `survey_detail_view` fetches `survey.questions.all()` (default related manager). POST skips CUI/CTI/CDI; GET filtering is incomplete relative to the manager design (`apps/surveys/views.py` comment acknowledges this).
-- **Local media directory is absent.** `MEDIA_ROOT` is `BASE_DIR / 'media'` and `media/` is gitignored; directory not present on disk until created.
-- **Promo video is local-only.** `static/images/Team-Statz_Fine-Cut_02-16x9-.mp4` is ignored by `*.mp4` in `.gitignore`; templates may reference it but it will not be in git.
+- **Local media directory is absent.** `MEDIA_ROOT` is `BASE_DIR / 'media'` and `media/` is gitignored; directory not present on disk until created (or until the first local video upload).
+- **Promo video via Blob / admin.** Prefer `VideoAsset` uploads over committing binaries. Legacy static `static/images/Team-Statz_Fine-Cut_02-16x9-.mp4` remains gitignored; About Us may still reference it until switched to `{% include 'videos/_video_embed.html' %}`.
+- **Azure storage is opt-in.** Without `AZURE_CONNECTION_STRING`, `STORAGES['default']` stays `FileSystemStorage` and DEBUG media serving in `statzcorp/urls.py` still works.
 - **GCCH / Azure deploy.** Deployment target is documented in `.env.example`, `requirements.txt`, and `production.py` comments. Checked-in `startup.sh` is the Azure App Service (Linux) Startup Command (collectstatic → migrate → gunicorn). No full Azure pipeline / App Service ARM/Bicep config in-repo yet — set Startup Command to `startup.sh` in the portal (or `az webapp config set --startup-file "startup.sh"`). `startup.sh` does **not** set `DJANGO_SETTINGS_MODULE` (ops owns App Settings) but **exits non-zero** unless it equals `statzcorp.settings.production` — otherwise `manage.py`/`wsgi.py` `setdefault` to `statzcorp.settings.local` (`DEBUG=True`).
 - **SQLite on Azure App Service is ephemeral unless under `/home`.** Linux App Service only persists `/home`. Default `DB_NAME` (`BASE_DIR/db.sqlite3`) lives in the ephemeral app root and is lost on restart/redeploy. Point `DB_NAME` under `/home` via App Settings for persistence until the planned MSSQL migration. Flagged in `startup.sh`; do not change the DB engine without an explicit request.
 - **MSSQL not wired yet.** `.env.example` and `requirements.txt` only document the future MSSQL path; active engine is SQLite.

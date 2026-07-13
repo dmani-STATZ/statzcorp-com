@@ -33,6 +33,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 | Marketing pages (home, about, team, products, capabilities, accreditations, resources) | Done | `apps/public/`, `templates/public/` |
 | Contact form → DB + email notification | Done | `apps/contact/` |
 | Surveys with classification field + public manager | Done | `apps/surveys/` |
+| Video hosting (Azure Blob / local filesystem) | Done | `apps/videos/` — `VideoAsset`, public `/videos/<slug>/`, admin upload |
 | Admin for contact messages and surveys | Done | `apps/*/admin.py` |
 | Custom site chrome + CSS/JS | Done | `templates/base.html`, `static/css/style.css`, `static/js/main.js` |
 | Env template for Azure/GCCH-oriented deploy | Documented | `.env.example`, `requirements.txt` comments |
@@ -70,6 +71,7 @@ Browser
        → apps.public     TemplateViews → templates/public/*
        → apps.contact    FormView → ContactMessage DB + email to CONTACT_EMAIL_TO
        → apps.surveys    List/detail → Survey/Question/Submission/Answer
+       → apps.videos     DetailView → VideoAsset (Blob Storage or local media)
        → /admin/         Django admin
   ← templates/base.html + static/ (WhiteNoise in middleware for static files)
 ```
@@ -78,6 +80,7 @@ Browser
 
 - **Current:** SQLite via `statzcorp/settings/base.py` defaults / `.env.example` (`django.db.backends.sqlite3`, file `db.sqlite3`, gitignored).
 - **Planned later:** Microsoft SQL Server (MSSQL). Transition notes live in `.env.example` and commented deps in `requirements.txt` (`mssql-django`, `pyodbc`). Not configured yet.
+- **Media / video files:** Local `FileSystemStorage` when `AZURE_CONNECTION_STRING` is unset; Azure Blob Storage (`storages.backends.azure_storage.AzureStorage`, GCCH-compatible connection string, container `media`) when set. Model: `VideoAsset` in `apps/videos/`.
 - **Not used:** PostgreSQL — removed from project guidance and deps (owner-stated).
 
 **Email:** Console backend forced in `statzcorp/settings/local.py`. Production uses SMTP settings from env (Office 365 host defaults in `base.py` / `.env.example`).
@@ -95,6 +98,7 @@ Browser
 | **CMMC** | Cybersecurity Maturity Model Certification — referenced in site badges/content and roadmap |
 | **CUI / CTI / CDI** | Controlled Unclassified Information / Controlled Technical Information / Covered Defense Information — values of `security_classification` on survey models; must not appear on public survey surfaces |
 | **`public_objects`** | Custom manager on `ClassifiedModel` that excludes CUI/CTI/CDI (`apps/surveys/models.py`) |
+| **`published_objects`** | Custom manager on `VideoAsset` that returns only `is_published=True` (`apps/videos/models.py`) |
 | **GCCH** | Azure Government Community Cloud High — stated target environment in settings/requirements comments |
 | **NSN / FSC** | National Stock Number / Federal Stock Class — domain terms in roadmap content for capabilities copy |
 | **JCP** | Joint Certification Program (DD Form 2345) — covered on the Resources page (`public:resources`) |
@@ -110,7 +114,7 @@ Only items with a concrete source:
 2. **Page-local CSS in some templates.** `templates/contact/contact-us.html` and `templates/public/accreditations.html` still embed `<style>` blocks; Django messages styles in `templates/base.html` were moved to `static/css/style.css` (`.site-message*`). Preference remains consolidating remaining template CSS into the shared stylesheet.
 3. **Duplicate CSS/JS trees.** Root `css/` + `js/` identical to `static/` copies at last full sync; risk of editing the wrong tree (and they have diverged after the 2026-07-13 palette work on `static/` only).
 4. **Survey detail GET vs classification.** `survey_detail_view` uses `survey.questions.all()`; POST skips classified questions, but GET does not filter via `public_objects` (`apps/surveys/views.py`).
-5. **Video asset not in git.** `*.mp4` ignored; commit message documents removing a large video from the initial commit.
+5. **Legacy local promo video still ignored by git.** `*.mp4` remains gitignored. Marketing videos are now hosted via `VideoAsset` + Azure Blob (or local `MEDIA_ROOT` in dev) — do not commit large video binaries. The old static path `static/images/Team-Statz_Fine-Cut_02-16x9-.mp4` may still be referenced by About Us until that page is switched to a `VideoAsset` embed.
 6. **No automated tests or CI.** Confirmed by absence of test modules and `.github/workflows`.
 7. **MSSQL migration not implemented.** Only documented as future in `.env.example` / `requirements.txt` comments.
 

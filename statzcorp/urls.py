@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('apps.public.urls')),
     path('', include('apps.contact.urls')),
     path('surveys/', include('apps.surveys.urls')),
+    path('videos/', include('apps.videos.urls')),
 ]
 
 if settings.DEBUG:

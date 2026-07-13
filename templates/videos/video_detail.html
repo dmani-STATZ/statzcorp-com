@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ video.title }} — STATZ Corporation{% endblock %}
+
+{% block meta_description %}{% if video.description %}{{ video.description|truncatewords:40 }}{% else %}{{ video.title }} — STATZ Corporation promotional video.{% endif %}{% endblock %}
+
+{% block extra_head %}
+  <meta property="og:type" content="video.other">
+  <meta property="og:title" content="{{ video.title }}">
+  <meta property="og:description" content="{% if video.description %}{{ video.description|truncatewords:40 }}{% else %}{{ video.title }} — STATZ Corporation{% endif %}">
+  <meta property="og:url" content="{{ og_page_url }}">
+  {% if og_image_url %}
+  <meta property="og:image" content="{{ og_image_url }}">
+  {% endif %}
+  <meta property="og:video" content="{{ og_video_url }}">
+  <meta property="og:video:type" content="video/mp4">
+  <meta name="twitter:card" content="player">
+  <meta name="twitter:title" content="{{ video.title }}">
+  {% if og_image_url %}
+  <meta name="twitter:image" content="{{ og_image_url }}">
+  {% endif %}
+{% endblock %}
+
+{% block banner %}
+  <section id="inner-header">
+    <div class="container">
+      <h2>{{ video.title }}</h2>
+      {% if video.description %}
+      <p>{{ video.description|truncatewords:24 }}</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>{{ video.title }}</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>STATZ Corporation</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <main class="page-content video-detail-page">
+    <div class="container">
+      <div class="video-wrap video-wrap--detail animate-on-scroll">
+        <video
+          controls
+          preload="metadata"
+          {% if video.thumbnail %}poster="{{ video.thumbnail.url }}"{% endif %}
+        >
+          <source src="{{ video.video_file.url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div class="video-detail-copy animate-on-scroll">
+        <h1 class="video-detail-title">{{ video.title }}</h1>
+        {% if video.description %}
+        <p class="video-detail-description">{{ video.description|linebreaksbr }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+{% endblock %}

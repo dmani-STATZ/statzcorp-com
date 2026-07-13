@@ -23,13 +23,18 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
+THIRD_PARTY_APPS = [
+    'storages',  # django-storages — Azure Blob backend when AZURE_CONNECTION_STRING is set
+]
+
 LOCAL_APPS = [
     'apps.public',
     'apps.contact',
     'apps.surveys',
+    'apps.videos',
 ]
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # ── Middleware ────────────────────────────────────────────────────────────────
 MIDDLEWARE = [
@@ -110,6 +115,21 @@ STORAGES = {
 # ── Media files (user uploads) ────────────────────────────────────────────────
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Azure Blob Storage (Azure Government / GCCH) — optional.
+# Leave AZURE_CONNECTION_STRING blank for local FileSystemStorage.
+# Never log or commit the connection string. The connection string encodes
+# the GCCH endpoint suffix (core.usgovcloudapi.net); do not set account
+# name/key separately.
+AZURE_CONNECTION_STRING = config('AZURE_CONNECTION_STRING', default='')
+AZURE_CONTAINER = config('AZURE_CONTAINER', default='media')
+AZURE_OVERWRITE_FILES = False
+AZURE_LOCATION = 'media'
+
+if AZURE_CONNECTION_STRING:
+    STORAGES['default'] = {
+        'BACKEND': 'storages.backends.azure_storage.AzureStorage',
+    }
 
 # ── Default primary key ───────────────────────────────────────────────────────
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

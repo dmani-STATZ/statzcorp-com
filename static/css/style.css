@@ -620,6 +620,105 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
+.video-wrap--detail video,
+.video-wrap--embed video {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.video-detail-page .video-detail-copy {
+  max-width: 960px;
+  margin: 0 auto 40px;
+}
+
+.video-detail-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 8px 0 12px;
+  letter-spacing: 0.02em;
+}
+
+.video-detail-description {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: #555;
+  margin: 0;
+}
+
+.video-embed-caption {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+}
+
+.video-embed-caption a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.video-embed-caption a:hover {
+  color: var(--accent);
+}
+
+.video-embed-card {
+  display: block;
+  max-width: 480px;
+  text-decoration: none;
+  color: inherit;
+  margin: 24px 0;
+}
+
+.video-embed-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--navy);
+  aspect-ratio: 16 / 9;
+}
+
+.video-embed-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.video-embed-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--primary) 100%);
+}
+
+.video-embed-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.72);
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.video-embed-card:hover .video-embed-play,
+.video-embed-card:focus-visible .video-embed-play {
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+.video-embed-title {
+  display: block;
+  margin-top: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: 0.02em;
+}
+
 hr.section-divider {
   border: none;
   border-top: 2px solid var(--border);

@@ -1,0 +1,41 @@
+{# Reusable video embed. Context: video (VideoAsset). Optional: inline_player=True for HTML5 player. #}
+{% if video %}
+  {% if inline_player %}
+    <div class="video-wrap video-wrap--embed">
+      <video
+        controls
+        preload="metadata"
+        {% if video.thumbnail %}poster="{{ video.thumbnail.url }}"{% endif %}
+      >
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      {% if video.title %}
+      <p class="video-embed-caption">
+        <a href="{{ video.get_absolute_url }}">{{ video.title }}</a>
+      </p>
+      {% endif %}
+    </div>
+  {% else %}
+    <a
+      href="{{ video.get_absolute_url }}"
+      class="video-embed-card"
+      aria-label="Watch {{ video.title }}"
+    >
+      <span class="video-embed-media">
+        {% if video.thumbnail %}
+          <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" loading="lazy">
+        {% else %}
+          <span class="video-embed-placeholder" aria-hidden="true"></span>
+        {% endif %}
+        <span class="video-embed-play" aria-hidden="true">
+          <svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg" width="68" height="48">
+            <path d="M66.52 7.74a8 8 0 00-5.6-5.66C55.78.76 34 0 34 0S12.22.76 7.08 2.08a8 8 0 00-5.6 5.66A83.3 83.3 0 000 24a83.3 83.3 0 001.48 16.26 8 8 0 005.6 5.66C12.22 47.24 34 48 34 48s21.78-.76 26.92-2.08a8 8 0 005.6-5.66A83.3 83.3 0 0068 24a83.3 83.3 0 00-1.48-16.26z" fill="currentColor"/>
+            <path d="M45 24L27 14v20" fill="#fff"/>
+          </svg>
+        </span>
+      </span>
+      <span class="video-embed-title">{{ video.title }}</span>
+    </a>
+  {% endif %}
+{% endif %}

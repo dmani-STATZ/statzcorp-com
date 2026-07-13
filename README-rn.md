@@ -2,6 +2,7 @@
 
 ## 2026-07-13
 ### Added
+- Added video hosting via Azure Blob Storage — staff can now upload promotional videos through Django admin, with public shareable landing pages for use in emails and embeddable players for other site pages.
 - `startup.sh` — Azure App Service (Linux) startup command that runs collectstatic, applies migrations, and launches gunicorn bound to Azure's injected $PORT.
 - New **Resources** section at `/resources/` with guides for CAGE Code registration, the Joint Certification Program (DD Form 2345), and shipping/packaging preparation.
 ### Changed
