@@ -8,7 +8,19 @@ set -euo pipefail
 # Settings) for data to survive. This is a known limitation pending the
 # planned MSSQL migration — do not change the engine here.
 
+# Do not export/override DJANGO_SETTINGS_MODULE here — ops owns it via Azure
+# App Settings. But manage.py and wsgi.py setdefault to
+# statzcorp.settings.local (DEBUG=True, console email). Refuse to start
+# unless production settings are explicitly configured.
+if [[ "${DJANGO_SETTINGS_MODULE:-}" != "statzcorp.settings.production" ]]; then
+    echo "ERROR: DJANGO_SETTINGS_MODULE must be 'statzcorp.settings.production' (got '${DJANGO_SETTINGS_MODULE:-<unset>}')." >&2
+    echo "       Set it under App Service → Configuration → Application Settings." >&2
+    echo "       Refusing to start: unset/wrong values fall back to local settings (DEBUG=True)." >&2
+    exit 1
+fi
+
 echo "=== STATZ Corp: starting deployment tasks ==="
+echo "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
