@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Products — STATZ Corporation{% endblock %}
+
+{% block extra_css %}
+  <style>
+    /* Tab selector for NAICS/FSC */
+    .tab-bar { display: flex; gap: 0; margin-bottom: 0; border-bottom: 3px solid var(--navy); }
+    .tab-btn {
+      padding: 12px 28px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border: none;
+      background: var(--gray-light);
+      color: var(--gray-mid);
+      cursor: pointer;
+      border-radius: 4px 4px 0 0;
+      transition: background 0.2s, color 0.2s;
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+    .tab-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .tab-btn:hover:not(.active) { background: #e0e0e0; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+{% endblock %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>Products</h2>
+      <p>Your needs are unique, and should be given the expert individual attention they deserve.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>Products</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="page-content">
+    <div class="container">
+
+      <div class="middle-top animate-on-scroll">
+        <h2>In today's global <strong>manufacturing environment, quality, technical support</strong> and delivery are a given. The only element left to improve on is value!</h2>
+      </div>
+
+      <div class="about-content animate-on-scroll">
+        <div class="about-left">
+          <img src="{% static 'images/Depositphotos_7495892_l-20151.jpg' %}" alt="Products">
+        </div>
+        <div class="about-desc">
+          <p>STATZ Corporation will work with you to help define your unique needs. We then strive to evolve manufacturing solutions specifically for you. Yes, we have extensive experience to draw on, based on what we have done for other people, but we strive to supply you what you need.</p>
+          <p>Our highly qualified manufacturing sources stand ready to serve the technology part of the equation with an array of manufacturing processes and services. They will deliver quality, on time, specific to your needs!</p>
+        </div>
+      </div>
+
+      <!-- TAB BAR -->
+      <div class="animate-on-scroll" style="margin-top:40px;">
+        <div class="tab-bar" role="tablist">
+          <button class="tab-btn active" id="tab-naics" role="tab" aria-selected="true" aria-controls="panel-naics">NAICS Codes</button>
+          <button class="tab-btn" id="tab-fsc" role="tab" aria-selected="false" aria-controls="panel-fsc">FSC Codes</button>
+        </div>
+
+        <!-- NAICS TABLE -->
+        <div class="tab-panel active" id="panel-naics" role="tabpanel" aria-labelledby="tab-naics">
+          <div class="product-table-wrap">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>NAICS</th>
+                  <th>Description</th>
+                  <th>NAICS</th>
+                  <th>Description</th>
+                  <th>NAICS</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>326199</td><td>All Other Plastics Product Manufacturing</td><td>332510</td><td>Hardware Manufacturing</td><td>336419</td><td>Other Guided Missile And Space Vehicle Parts And Auxiliary Equipment Manufacturing</td></tr>
+                <tr><td>326220</td><td>Rubber And Plastics Hoses And Belting Manufacturing</td><td>332710</td><td>Machine Shops</td><td>336992</td><td>Military Armored Vehicle, Tank, And Tank Component Manufacturing</td></tr>
+                <tr><td>326291</td><td>Rubber Product Manufacturing For Mechanical Use</td><td>332721</td><td>Precision Turned Product Manufacturing</td><td>339112</td><td>Surgical And Medical Instrument Manufacturing</td></tr>
+                <tr><td>326299</td><td>All Other Rubber Product Manufacturing</td><td>332993</td><td>Ammunition (Except Small Arms) Manufacturing</td><td>339113</td><td>Surgical Appliance And Supplies Manufacturing</td></tr>
+                <tr><td>331491</td><td>Nonferrous Metal (Except Copper And Aluminum) Rolling, Drawing, And Extruding</td><td>332994</td><td>Small Arms, Ordnance, And Ordnance Accessories Manufacturing</td><td>423510</td><td>Metal Service Centers And Other Metal Merchant Wholesalers</td></tr>
+                <tr><td>331511</td><td>Iron Foundries</td><td>332999</td><td>All Other Miscellaneous Fabricated Metal Product Manufacturing</td><td>425120 (Primary)</td><td>Wholesale Trade Agents And Brokers</td></tr>
+                <tr><td>331512</td><td>Steel Investment Foundries</td><td>334419</td><td>Other Electronic Component Manufacturing</td><td>541330</td><td>Engineering Services</td></tr>
+                <tr><td>331524</td><td>Aluminum Foundries (Except Die-Casting)</td><td>335931</td><td>Current-Carrying Wiring Device Manufacturing</td><td>541618</td><td>Other Management Consulting Services</td></tr>
+                <tr><td>332119</td><td>Metal Crown, Closure, And Other Metal Stamping (Except Automotive)</td><td>336411</td><td>Aircraft Manufacturing</td><td>541690</td><td>Other Scientific And Technical Consulting Services</td></tr>
+                <tr><td>332312</td><td>Fabricated Structural Metal Manufacturing</td><td>336412</td><td>Aircraft Engine And Engine Parts Manufacturing</td><td>541890</td><td>Other Services Related To Advertising</td></tr>
+                <tr><td>332322</td><td>Sheet Metal Work Manufacturing</td><td>336413</td><td>Other Aircraft Parts And Auxiliary Equipment Manufacturing</td><td>541990</td><td>All Other Professional, Scientific, And Technical Services</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FSC TABLE -->
+        <div class="tab-panel" id="panel-fsc" role="tabpanel" aria-labelledby="tab-fsc">
+          <div class="about-content" style="margin-top:24px; margin-bottom:16px;">
+            <div class="about-left">
+              <img src="{% static 'images/Depositphotos_58283389_l-20151.jpg' %}" alt="FSC Codes">
+            </div>
+            <div class="about-desc">
+              <p>STATZ Corporation will work with you to help define your unique needs. We then strive to evolve manufacturing solutions specifically for you. Yes, we have extensive experience to draw on, based on what we have done for other people, but we strive to supply you what you need.</p>
+              <p>Our highly qualified manufacturing sources stand ready to serve the technology part of the equation with an array of manufacturing processes and services. They will deliver quality, on time, specific to your needs!</p>
+            </div>
+          </div>
+          <div class="product-table-wrap">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>FSC</th>
+                  <th>Description</th>
+                  <th>FSC</th>
+                  <th>Description</th>
+                  <th>FSC</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1005</td><td>Guns, through 30mm</td><td>3445</td><td>Punching and Shearing Machines</td><td>5920</td><td>Fuses, Arrestors, Absorbers, and Protectors</td></tr>
+                <tr><td>1010</td><td>Guns, over 30mm up to 75mm</td><td>3940</td><td>Blocks, Tackle, Rigging, and Slings</td><td>5925</td><td>Circuit Breakers</td></tr>
+                <tr><td>1015</td><td>Guns, 75mm through 125mm</td><td>3950</td><td>Winches, Hoists, Cranes, and Derricks</td><td>5930</td><td>Switches</td></tr>
+                <tr><td>1025</td><td>Guns, over 150mm through 200mm</td><td>4010</td><td>Chain and Wire Rope</td><td>5935</td><td>Connectors, Electrical</td></tr>
+                <tr><td>1055</td><td>Launchers, Rocket and Pyrotechnic</td><td>4020</td><td>Fiber Rope, Cordage, and Twine</td><td>5945</td><td>Relays and Solenoids</td></tr>
+                <tr><td>1095</td><td>Miscellaneous Weapons</td><td>4030</td><td>Fittings for Rope, Cable, and Chain</td><td>5950</td><td>Coils and Transformers</td></tr>
+                <tr><td>1290</td><td>Miscellaneous Fire Control Equipment</td><td>4130</td><td>Refrigeration and Air Conditioning Components</td><td>5955</td><td>Oscillators and Piezoelectric Crystals</td></tr>
+                <tr><td>1420</td><td>Guided Missile Components</td><td>4140</td><td>Fans, Air Circulators, and Blower Equipment</td><td>5960</td><td>Electron Tubes and Associated Hardware</td></tr>
+                <tr><td>1440</td><td>Launchers, Guided Missile</td><td>4220</td><td>Marine Lifesaving and Diving Equipment</td><td>5965</td><td>Headsets, Handsets, Microphones and Speakers</td></tr>
+                <tr><td>1560</td><td>Airframe Structural Components</td><td>4310</td><td>Compressors and Vacuum Pumps</td><td>5970</td><td>Electrical Insulators and Insulating Materials</td></tr>
+                <tr><td>1615</td><td>Helicopter Rotor Blades, Drive Mechanisms and Components</td><td>4320</td><td>Power and Hand Pumps</td><td>5975</td><td>Electrical Hardware and Supplies</td></tr>
+                <tr><td>1620</td><td>Aircraft Landing Gear Components</td><td>4330</td><td>Centrifugals, Separators, and Pressure and Vacuum Filters</td><td>5980</td><td>Optoelectronic Devices and Associated Hardware</td></tr>
+                <tr><td>1630</td><td>Aircraft Wheel and Brake Systems</td><td>4440</td><td>Driers, Dehydrators, and Anhydrators</td><td>5985</td><td>Antennas, Waveguides, and Related Equipment</td></tr>
+                <tr><td>1650</td><td>Aircraft Hydraulic, Vacuum, and De-icing System Components</td><td>4510</td><td>Plumbing Fixtures and Accessories</td><td>5990</td><td>Synchros and Resolvers</td></tr>
+                <tr><td>1660</td><td>Aircraft Air Conditioning, Heating, and Pressurizing Equipment</td><td>4520</td><td>Space and Water Heating Equipment</td><td>5995</td><td>Cable, Cord, and Wire Assemblies</td></tr>
+                <tr><td>1670</td><td>Parachutes; Aerial Pick Up, Delivery, Recovery Systems; and Cargo Tie Down Equipment</td><td>4710</td><td>Pipe, Tube and Rigid Tubing</td><td>5998</td><td>Electrical and Electronic assemblies, Boards, Cards, and Associated Hardware</td></tr>
+                <tr><td>1680</td><td>Miscellaneous Aircraft Accessories and Components</td><td>4720</td><td>Hose and Flexible Tubing</td><td>5999</td><td>Miscellaneous Electrical and Electronic Components</td></tr>
+                <tr><td>1710</td><td>Aircraft Landing Equipment</td><td>4730</td><td>Hose, Pipe, Tube, Lubrication, and Railing Fittings</td><td>6105</td><td>Motors, Electrical</td></tr>
+                <tr><td>1720</td><td>Aircraft Launching Equipment</td><td>4810</td><td>Valves, Powered</td><td>6110</td><td>Electrical Control Equipment</td></tr>
+                <tr><td>1740</td><td>Catapults and Arresting Gear</td><td>4820</td><td>Valves, Nonpowered</td><td>6115</td><td>Generators and Generator Sets, Electrical</td></tr>
+                <tr><td>1810</td><td>Combat Assault and Tactical Vehicles, Wheeled</td><td>4910</td><td>Motor Vehicle Maintenance and Repair Shop Specialized Equipment</td><td>6120</td><td>Transformers: Distribution and Power Station</td></tr>
+                <tr><td>2510</td><td>Vehicular Cab, Body, and Frame Structural Components</td><td>4920</td><td>Aircraft Maintenance and Repair Shop Specialized Equipment</td><td>6125</td><td>Converters, Electrical, Nonrotating</td></tr>
+                <tr><td>2520</td><td>Vehicular Power Transmission Components</td><td>4931</td><td>Fire Control Maintenance and Repair Shop Specialized Equipment</td><td>6130</td><td>Batteries, Rechargeable</td></tr>
+                <tr><td>2530</td><td>Vehicular Brake, Steering, Axle, Wheel, and Track Components</td><td>4940</td><td>Miscellaneous Maintenance and Repair Shop Specialized Equipment</td><td>6135</td><td>Batteries, Nonrechargeable</td></tr>
+                <tr><td>2540</td><td>Vehicular Furniture and Accessories</td><td>5110</td><td>Hand Tools, Edged, Nonpowered</td><td>6145</td><td>Wire and Cable, Electrical</td></tr>
+                <tr><td>2590</td><td>Miscellaneous Vehicular Components</td><td>5120</td><td>Hand Tools, Nonedged, Nonpowered</td><td>6150</td><td>Miscellaneous Electric Power and Distribution Equipment</td></tr>
+                <tr><td>2610</td><td>Tires and Tubes, Pneumatic, Except Aircraft</td><td>5130</td><td>Hand Tools, Power Driven</td><td>6160</td><td>Resistors</td></tr>
+                <tr><td>2630</td><td>Tires, Solid and Cushion</td><td>5133</td><td>Drill Bits, Counterbores, and Countersinks; Hand and Machine</td><td>6210</td><td>Indoor and Outdoor Electric Lighting Fixtures</td></tr>
+                <tr><td>2640</td><td>Tire Rebuilding and Tire and Tube Repair Materials</td><td>5136</td><td>Taps, Dies, and Collets; Hand and Machine</td><td>6220</td><td>Electric Vehicular Lights and Fixtures</td></tr>
+                <tr><td>2815</td><td>Diesel Engines and Components</td><td>5140</td><td>Tool and Hardware Boxes</td><td>6230</td><td>Electric Portable and Hand Lighting Equipment</td></tr>
+                <tr><td>2825</td><td>Gasoline Reciprocating Engines and Components, Except Aircraft; and Gasoline Rotary Engines</td><td>5145</td><td>Handles and Attachments for Tools</td><td>6240</td><td>Electric Lamps</td></tr>
+                <tr><td>2835</td><td>Gas Turbine Engines and Components, Except Aircraft</td><td>5180</td><td>Sets, Kits, Outfits, and Tools for Special Purposes</td><td>6350</td><td>Miscellaneous Alarm, Signal, and Security Detection Systems</td></tr>
+                <tr><td>2840</td><td>Gas Turbine Aircraft Engine and Engine Parts</td><td>5210</td><td>Measuring Tools, Craftsmen's</td><td>6505</td><td>Drugs and Biologicals</td></tr>
+                <tr><td>2895</td><td>Miscellaneous Engines and Components</td><td>5220</td><td>Inspection Gages and Precision Layout Tools</td><td>6515</td><td>Medical and Surgical Instruments, Equipment, and Supplies</td></tr>
+                <tr><td>2910</td><td>Engine Fuel System Components, Nonaircraft</td><td>5280</td><td>Sets, Kits, and Outfits — Measuring Tools</td><td>6520</td><td>Dental Instruments, Equipment, and Supplies</td></tr>
+                <tr><td>2915</td><td>Engine Fuel System Components, Aircraft</td><td>5305</td><td>Screws</td><td>6525</td><td>X-Ray Equipment and Supplies; Nuclear Radiation Detection Equipment</td></tr>
+                <tr><td>2920</td><td>Engine Electrical System Components, Nonaircraft</td><td>5306</td><td>Bolts</td><td>6530</td><td>Hospital Furniture, Equipment, Utensils, and Supplies</td></tr>
+                <tr><td>2925</td><td>Engine Electrical System Components, Aircraft</td><td>5307</td><td>Studs</td><td>6545</td><td>Medical Sets, Kits, and Outfits</td></tr>
+                <tr><td>2930</td><td>Engine Cooling System Components, Nonaircraft</td><td>5310</td><td>Nuts and Washers</td><td>6605</td><td>Navigational Instruments</td></tr>
+                <tr><td>2935</td><td>Engine Cooling System Components, Aircraft</td><td>5315</td><td>Nails, Keys, and Pins</td><td>6610</td><td>Flight Instruments</td></tr>
+                <tr><td>2940</td><td>Engine Air and Oil Filters, Strainers, and Cleaners, Nonaircraft</td><td>5320</td><td>Rivets</td><td>6615</td><td>Automatic Pilot Mechanisms and Airborne Gyro Components</td></tr>
+                <tr><td>2945</td><td>Engine Air and Oil Filters, Strainers, and Cleaners, Aircraft</td><td>5325</td><td>Fastening Devices</td><td>6620</td><td>Engine Instruments</td></tr>
+                <tr><td>2950</td><td>Turbo Superchargers and Components</td><td>5330</td><td>Packing and Gasket Materials</td><td>6625</td><td>Electrical and Electronic Properties Measuring and Testing Instruments</td></tr>
+                <tr><td>2990</td><td>Miscellaneous Engine Accessories, Nonaircraft</td><td>5331</td><td>O-Rings</td><td>6630</td><td>Chemical and Physical Properties Measuring and Testing Instruments</td></tr>
+                <tr><td>3010</td><td>Torque Converters and Speed Changers</td><td>5340</td><td>Hardware, Commercial</td><td>6635</td><td>Physical Properties Testing and Inspection Equipment</td></tr>
+                <tr><td>3020</td><td>Gears, Pulleys, Sprockets, and Transmission Chain</td><td>5342</td><td>Hardware, Aviation</td><td>6640</td><td>Laboratory Equipment and Supplies</td></tr>
+                <tr><td>3030</td><td>Belting, Drive Belts, Fan Belts, and Accessory Belts</td><td>5355</td><td>Knobs and Pointers</td><td>6645</td><td>Time Measuring Instruments</td></tr>
+                <tr><td>3040</td><td>Miscellaneous Power Transmission Equipment</td><td>5360</td><td>Coil, Flat, and Wire Springs</td><td>6650</td><td>Optical Instruments and Lenses</td></tr>
+                <tr><td>3110</td><td>Bearings, Antifriction, Unmounted</td><td>5365</td><td>Rings, Shims, and Spacers</td><td>6655</td><td>Geophysical Instruments</td></tr>
+                <tr><td>3120</td><td>Bearings, Plain, Unmounted</td><td>5420</td><td>Bars and Rods, Iron and Steel</td><td>6665</td><td>Hazard-Detecting Instruments and Apparatus</td></tr>
+                <tr><td>3130</td><td>Bearings, Mounted</td><td>5430</td><td>Bars and Rods, Nonferrous Base Metal</td><td>6670</td><td>Scales and Balances</td></tr>
+                <tr><td>3210</td><td>Sawing and Filing Machines</td><td>5510</td><td>Lumber and Related Basic Wood Materials</td><td>6675</td><td>Drafting, Surveying, and Mapping Instruments</td></tr>
+                <tr><td>3220</td><td>Turning, Milling, Boring, and Other Machine Tools, Metal Cutting Type</td><td>5530</td><td>Millwork</td><td>6685</td><td>Pressure, Temperature, and Humidity Measuring and Controlling Instruments</td></tr>
+                <tr><td>3230</td><td>Grinding Machines</td><td>5610</td><td>Mineral Construction Materials, Bulk</td><td>6710</td><td>Cameras, Motion Picture</td></tr>
+                <tr><td>3270</td><td>Welding Machines</td><td>5630</td><td>Pipe, Conduit, and Tube, Nonmetallic</td><td>6720</td><td>Cameras, Still Picture</td></tr>
+                <tr><td>3290</td><td>Miscellaneous Machine Tools</td><td>5640</td><td>Wallboard, Building Paper, and Thermal Insulation Materials</td><td>6730</td><td>Photographic Projection Equipment</td></tr>
+                <tr><td>3315</td><td>Drill Presses</td><td>5650</td><td>Prefabricated Structure and Scaffolding</td><td>6740</td><td>Photographic Developing and Finishing Equipment</td></tr>
+                <tr><td>3320</td><td>Grinders, Polishers, and Buffers</td><td>5660</td><td>Fencing, Fences, and Gates</td><td>6760</td><td>Photographic Supplies</td></tr>
+                <tr><td>3340</td><td>Metalworking Lathes</td><td>5680</td><td>Miscellaneous Construction Materials</td><td>6780</td><td>Film, Processed</td></tr>
+                <tr><td>3350</td><td>Milling Machines</td><td>5805</td><td>Telephone and Telegraph Equipment</td><td>6810</td><td>Chemicals and Chemical Products</td></tr>
+                <tr><td>3360</td><td>Planers and Shapers</td><td>5815</td><td>Teletype and Facsimile Equipment</td><td>6820</td><td>Dyes</td></tr>
+                <tr><td>3405</td><td>Attachments and Accessories for Machine Tools</td><td>5821</td><td>Radio and Television Communication Equipment, Except Airborne</td><td>6830</td><td>Gases: Compressed and Liquefied</td></tr>
+                <tr><td>3410</td><td>Woodworking Machinery and Equipment</td><td>5826</td><td>Radio Navigation Equipment, Except Airborne</td><td>6840</td><td>Pest Control Agents and Disinfectants</td></tr>
+                <tr><td>3411</td><td>Saw Blades and Handsaws</td><td>5830</td><td>Intercommunication and Public Address Systems, Except Airborne</td><td>6850</td><td>Miscellaneous Chemical Specialties</td></tr>
+                <tr><td>3419</td><td>Miscellaneous Woodworking Machinery and Equipment</td><td>5895</td><td>Miscellaneous Communication Equipment</td><td>8010</td><td>Paints, Dopes, Varnishes, and Related Products</td></tr>
+                <tr><td>3420</td><td>Metalworking Machinery and Equipment, NEC</td><td>5905</td><td>Resistors</td><td>8030</td><td>Preservative and Sealing Compounds</td></tr>
+                <tr><td>3422</td><td>Metalworking Presses</td><td>5910</td><td>Capacitors</td><td>8040</td><td>Adhesives</td></tr>
+                <tr><td>3424</td><td>Metal Heat Treating Equipment</td><td>5915</td><td>Filters and Networks</td><td>9505</td><td>Wire, Nonelectrical, Iron and Steel</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        this.setAttribute('aria-selected','true');
+        document.getElementById(this.getAttribute('aria-controls')).classList.add('active');
+      });
+    });
+  </script>
+{% endblock %}

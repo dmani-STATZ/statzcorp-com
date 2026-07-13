@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us — STATZ Corporation{% endblock %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>About Us</h2>
+      <p>Your needs are unique, and should be given the expert individual attention they deserve.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>About Us</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="page-content">
+    <div class="container">
+
+      <!-- Intro video -->
+      <div class="video-wrap animate-on-scroll">
+        <video controls preload="metadata" poster="{% static 'images/about-thumb.jpg' %}">
+          <source src="{% static 'images/Team-Statz_Fine-Cut_02-16x9-.mp4' %}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <p class="animate-on-scroll" style="margin-top:24px; font-size:16px; color:#555; line-height:1.85;">
+        STATZ Corporation is a small business with a big reach capable of delivering many of your supply chain needs while simultaneously helping you achieve your SDVOSB procurement goals!
+      </p>
+
+      <!-- Highlight quote -->
+      <div class="middle-top animate-on-scroll">
+        <h2>In today's global <strong>manufacturing environment, quality, technical support</strong> and delivery are a given. The only element left to improve on is value!</h2>
+      </div>
+
+      <!-- About description with image + red bar -->
+      <div class="about-img-bar animate-on-scroll">
+        <img src="{% static 'images/about-thumb.jpg' %}" alt="STATZ Corporation" style="max-width:256px; border: 2px solid #ddd; border-radius:4px;">
+        <div class="red-divider"></div>
+        <div style="flex:1;">
+          <p style="font-size:15px; color:#555; line-height:1.85; margin:0;">
+            STATZ Corporation is your Friendly and Knowledgeable "Service Disabled Veteran Owned Small Business". Our SDVOSB status has been verified by the VA-CVE and we focus on delivering superior supply chain support to the government, military and commercial entities by providing quality, efficient and cost effective solutions to achieve procurement objectives. We serve as a prime contractor to the federal government and utilize our position as a SDVOSB dealer organization to team with a diverse supplier base of high quality manufacturers and distributors to provide a vast array of manufactured parts, components, assemblies, and finished products.
+          </p>
+        </div>
+      </div>
+
+      <!-- Mission -->
+      <div class="about-full animate-on-scroll">
+        <h2>Mission Statement:</h2>
+        <p>Our mission is to be the best SDVOSB provider of goods and services in markets that we serve.</p>
+        <p>While we specialize in the government procurement SDVOSB set-aside market of Simplified Acquisition Threshold parts and components, we have a proven track record and demonstrated ability to provide quality service and delivery in all acquisition categories.</p>
+        <p>We can help you meet your procurement goals for SDVOSB awards and beyond!</p>
+      </div>
+
+      <!-- History -->
+      <div class="about-full animate-on-scroll">
+        <h2>Our History:</h2>
+        <p>STATZ Corporation was founded as an SDVOSB in 2004 by Bill Statz in Cross Plains, WI. In that time, STATZ Corp has grown to become the largest SDVOSB, and largest small business government contractor in Wisconsin for 2019 with Prime contracts valued at $55 Million dollars. Bill Statz retired in December 2019.</p>
+        <p>The Statz family has a long history in the great state of Wisconsin. His great-grandfather, along with 3 of his brothers, all 4 immigrated with their families, coming to the Cross Plains area from Germany in the 1850's. Bill is a 3rd generation native born, all USA Badger! A number of his extended family members served in WWII, with one cousin KIA in the South Pacific, and another first cousin with a colorful and bloody battles tour in Europe as infantry, and as a jeep driver for General Patton. There were also several cousins who served during the Korean war, but fortunately, no casualties. The Statz family also lost a cousin in the 9/11 attack at the Pentagon in Washington D.C.</p>
+        <p>Our founder, William "Bill" Statz served in the Vietnam war when he was just 19. He was a graduate of the Artillery NCO Academy at Fort Sill, OK, and served in Vietnam during 1968-69 as a Staff Sergeant E6, Chief of Firing Battery. He is a decorated war hero, and sustained his disability injuries while under heavy rocket, mortar, and perimeter attacks by the North Vietnam Army. A number of his comrades are listed on the Vietnam Memorial Wall. Bill was also selected for the Badger Honor Flight on May 12, 2018 along with one of his cousins, a Korean War Veteran.</p>
+        <p>January 2019, Mark Lyons became the new Owner and president of STATZ Corporation. Mark served 20 years active duty where he was a Cavalry Scout, Paratrooper, Jumpmaster and traveled the world for this great nation. Mark looks forward to improving STATZ Corporation for our real customers — the War-fighters.</p>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="middle-bottom-title animate-on-scroll">
+        <h6><a href="{% url 'public:our_team' %}">Meet Our Team &rarr;</a></h6>
+      </div>
+
+    </div>
+  </main>
+{% endblock %}

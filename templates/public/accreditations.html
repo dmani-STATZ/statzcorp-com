@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accreditations — STATZ Corporation{% endblock %}
+
+{% block extra_css %}
+  <style>
+    .accred-section {
+      padding: 50px 0 60px;
+    }
+
+    .accred-intro {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 50px;
+      color: var(--gray-mid);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .accred-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+    }
+
+    .accred-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      transition: box-shadow 0.25s, transform 0.25s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .accred-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,.14);
+      transform: translateY(-3px);
+    }
+
+    .accred-card img {
+      max-height: 120px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+    }
+
+    .accred-card h3 {
+      font-size: 17px;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .accred-card p {
+      font-size: 13px;
+      color: var(--gray-mid);
+      line-height: 1.6;
+    }
+
+    .accred-card a {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--red);
+      font-weight: 600;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.3px;
+    }
+  </style>
+{% endblock %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>Accreditations</h2>
+      <p>STATZ Corporation is accredited and affiliated with many outstanding organizations.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>Accreditations</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="accred-section">
+    <div class="container">
+
+      <div class="accred-intro animate-on-scroll">
+        <p>STATZ Corporation maintains the highest standards of quality, integrity, and compliance. Our accreditations and affiliations reflect our commitment to excellence in serving government, military, and commercial clients.</p>
+      </div>
+
+      <div class="accred-cards">
+
+        <div class="accred-card animate-on-scroll">
+          <img src="{% static 'images/iso-logo-300x300.png' %}" alt="ISO Certified">
+          <div>
+            <h3>ISO Certified</h3>
+            <p>STATZ Corporation holds ISO certification, demonstrating our commitment to internationally recognized quality management standards.</p>
+            <a href="{% url 'public:about_us' %}">View Accreditations</a>
+          </div>
+        </div>
+
+        <div class="accred-card animate-on-scroll">
+          <img src="{% static 'images/OH-SDVOSB-e1541537627431-300x232.jpg' %}" alt="Ohio SDVOSB Certified">
+          <div>
+            <h3>SDVOSB Certified (VA-CVE)</h3>
+            <p>Our Service Disabled Veteran Owned Small Business status has been verified by the Department of Veterans Affairs Center for Verification and Evaluation.</p>
+            <a href="http://www.va.gov/osdbu/programs/sdvosb.asp" target="_blank" rel="noopener">Learn More</a>
+          </div>
+        </div>
+
+        <div class="accred-card animate-on-scroll">
+          <img src="{% static 'images/WI-SDVOSB-232x300.jpg' %}" alt="Wisconsin SDVOSB Certified">
+          <div>
+            <h3>Wisconsin SDVOSB</h3>
+            <p>Certified by the State of Wisconsin as a Disabled Veteran Business, demonstrating our commitment to veteran-owned enterprise at the state level.</p>
+          </div>
+        </div>
+
+        <div class="accred-card animate-on-scroll">
+          <img src="{% static 'images/NDIA-Logo.png' %}" alt="NDIA Member">
+          <div>
+            <h3>NDIA Member</h3>
+            <p>STATZ Corporation is a proud member of the National Defense Industrial Association, the premier association serving America's defense industrial base.</p>
+            <a href="http://www.ndia.org/" target="_blank" rel="noopener">Visit NDIA</a>
+          </div>
+        </div>
+
+        <div class="accred-card animate-on-scroll">
+          <img src="{% static 'images/BBB-Rating.jpg' %}" alt="BBB A+ Rating">
+          <div>
+            <h3>BBB A+ Rating</h3>
+            <p>STATZ Corporation holds an A+ rating with the Better Business Bureau, reflecting our dedication to ethical business practices and customer satisfaction.</p>
+            <a href="http://www.bbb.org/wisconsin/business-reviews/industrial-consultants/statz-corporation-in-cross-plains-wi-1000023380/" target="_blank" rel="noopener">View BBB Profile</a>
+          </div>
+        </div>
+
+        <div class="accred-card animate-on-scroll">
+          <img src="{% static 'images/cropped-CMMC-2-logo.png' %}" alt="CMMC Level 2">
+          <div>
+            <h3>CMMC Level 2</h3>
+            <p>STATZ Corporation is compliant with Cybersecurity Maturity Model Certification (CMMC) Level 2, ensuring the protection of Controlled Unclassified Information (CUI).</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}STATZ Corporation — Service Disabled Veteran Owned Small Business{% endblock %}
+
+{% block banner %}
+  <!-- ===== HERO SLIDER ===== -->
+  <section id="hero-slider" aria-label="Hero image slideshow">
+    <div class="slide active">
+      <img src="{% static 'images/slider-1.jpg' %}" alt="STATZ Corporation — Supply Chain Excellence">
+    </div>
+    <div class="slide">
+      <img src="{% static 'images/slider-2.jpg' %}" alt="STATZ Corporation — Defense and Government">
+    </div>
+    <div class="slide">
+      <img src="{% static 'images/slider-3.jpg' %}" alt="STATZ Corporation — Quality Manufacturing">
+    </div>
+    <div class="slide">
+      <img src="{% static 'images/slider-4.jpg' %}" alt="STATZ Corporation — SDVOSB Dealer">
+    </div>
+
+    <button class="slider-arrow prev" aria-label="Previous slide">&#8249;</button>
+    <button class="slider-arrow next" aria-label="Next slide">&#8250;</button>
+
+    <div class="slider-controls">
+      <span class="slider-dot active" data-index="0"></span>
+      <span class="slider-dot" data-index="1"></span>
+      <span class="slider-dot" data-index="2"></span>
+      <span class="slider-dot" data-index="3"></span>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== ABOUT HOME ===== -->
+  <section id="about-home">
+    <div class="container">
+      <div class="about-home-inner">
+
+        <div class="about-home-title animate-on-scroll">
+          <h2><span>About STATZ Corporation</span></h2>
+        </div>
+
+        <div class="about-home-desc animate-on-scroll">
+          <p>STATZ Corporation is your Friendly and Knowledgeable "Service Disabled Veteran Owned Small Business". Our SDVOSB status has been verified by the VA-CVE and certified by the state of Wisconsin as a Disabled Veteran Business. We focus on delivering superior supply chain support to the government, military and commercial entities by providing quality, efficient and cost effective solutions to achieve procurement objectives. We can help you meet your procurement goals for SDVOSB awards and beyond!</p>
+          <a class="read-more" href="{% url 'public:about_us' %}">
+            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>
+            Read More
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== OUR SERVICES ===== -->
+  <section id="our-services">
+    <div class="container">
+      <div class="services-grid">
+
+        <div class="service-card animate-on-scroll">
+          <img src="{% static 'images/meetour-team.jpg' %}" alt="Meet Our Team">
+          <div class="card-title">
+            <h2><a href="{% url 'public:our_team' %}">Meet Our Team</a></h2>
+          </div>
+        </div>
+
+        <div class="service-card animate-on-scroll">
+          <img src="{% static 'images/Depositphotos_12690648_l-20151.jpg' %}" alt="Products">
+          <div class="card-title">
+            <h2><a href="{% url 'public:products' %}">Products</a></h2>
+          </div>
+        </div>
+
+        <div class="service-card animate-on-scroll">
+          <img src="{% static 'images/Depositphotos_89150226_l-20151.jpg' %}" alt="Capabilities">
+          <div class="card-title">
+            <h2><a href="{% url 'public:capabilities' %}">Capabilities</a></h2>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

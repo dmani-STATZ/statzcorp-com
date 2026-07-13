@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Team — STATZ Corporation{% endblock %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>Our Team</h2>
+      <p>Your needs are unique and should be given the expert individual attention they deserve.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>Our Team</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="page-content">
+    <div class="container">
+
+      <!-- Full team photo -->
+      <div class="team-image animate-on-scroll">
+        <img src="{% static 'images/original-BDDD91E3-5229-4162-9957-3B9ADE1D028D.jpeg' %}" alt="The STATZ Corporation Team">
+      </div>
+
+      <!-- ─── MARK LYONS ─── -->
+      <div class="profile-row animate-on-scroll">
+        <div class="profile-label">
+          <div class="inner-box">
+            <h2>Stanley "Mark" Lyons</h2>
+            <p>President / Owner<br>STATZ Corporation</p>
+          </div>
+        </div>
+        <div class="profile-desc">
+          <img class="profile-photo" src="{% static 'images/Mark-scaled-e1757505553467-300x245.jpg' %}" alt="Mark Lyons" width="240">
+          <p>Mark is the President and Owner of STATZ Corporation (Jan 2020 to Present)</p>
+          <p>Mark is a retired Army 1SG and Disabled Veteran with more than 20 years as a Cavalry Scout and Paratrooper with several deployments worldwide. Mark's education includes an M.B.A. in Business Administration from Cardinal Stritch University, a Bachelor of Science in Marketing from Columbia Southern University and Lean Six Sigma Green Belt from Villanova. Mark's career in management, leadership and supply chain management/development will prove invaluable to our customers, suppliers and the STATZ Corporation Team. Mark wants STATZ to be all about the Warfighters and takes STATZ's mission seriously for our great nation.</p>
+        </div>
+      </div>
+
+      <!-- ─── CONTRACT ADMINISTRATION ─── -->
+      <div class="profile-row animate-on-scroll">
+        <div class="profile-label">
+          <div class="inner-box">
+            <h2>Contract Administration Team</h2>
+            <p>The Contract Administration Team is on the front line of every contract STATZ Corporation enters with the U.S. Government. This team is highly skilled and is an integral part of the communications between the government agencies and our suppliers.</p>
+          </div>
+        </div>
+        <div class="profile-desc">
+          <img class="profile-photo-right" src="{% static 'images/1000009337-300x225.jpg' %}" alt="Chad Fuller" width="200">
+          <strong>Chad Fuller, Contract Manager</strong>
+          <p>Chad is a retired Army 1SG and Disabled Veteran of more than 20 years as an Infantryman and Paratrooper with several deployments worldwide. These deployments have given Chad a unique insight into the needs of the WarFighters and the motivation to see things through.</p>
+          <br style="clear:both;">
+          <img class="profile-photo" src="{% static 'images/Barb-Pearsall-150x150.jpg' %}" alt="Barb Pearsall" width="160">
+          <strong>Barb Pearsall, Contract Manager</strong>
+          <p>Barb has an associate degree in Computer Science from Western Wisconsin College and a master certificate in Project Management from the University of Wisconsin-Madison. The degree and certificate, along with her work experience in healthcare contracts and budgeting, has allowed Barb to truly make a difference.</p>
+        </div>
+      </div>
+
+      <!-- ─── ACCOUNTING & ADMINISTRATION ─── -->
+      <div class="profile-row animate-on-scroll">
+        <div class="profile-label">
+          <div class="inner-box">
+            <h2>Accounting and Administration</h2>
+            <p>The Finance and Accounting Team plays an important role for STATZ Corporation that keeps the machine moving. This department handles government financial matters, supplier payments, WAWF and VSM for the entire team.</p>
+          </div>
+        </div>
+        <div class="profile-desc">
+          <img class="profile-photo" src="{% static 'images/Jennifer-Nolan.jpg' %}" alt="Jennifer Nolan" width="180">
+          <strong>Jennifer Nolan — HR and Accounting</strong>
+          <p>Jenny holds an Associate Degree in Accounting from Madison College and a Bachelor of Arts in English from the University of Minnesota. Since joining STATZ in 2019, she has developed extensive experience in shipment processing, contract administration, and accounting operations. Jenny combines creativity with strong organizational skills and is dedicated to helping STATZ succeed.</p>
+          <br style="clear:both;">
+          <img class="profile-photo-right" src="{% static 'images/Dion-Mani-150x150.jpg' %}" alt="Dion Mani" width="175">
+          <strong>Dion Mani — IT Specialist</strong>
+          <p>Dion is a retired Sergeant First Class and Disabled Veteran that served over 21 years of combined Active Duty and Army National Guard (AGR). Dion has certificates in CNC Robotics in Manufacturing and has 18 years of experience in the Computer Information Systems.</p>
+          <br style="clear:both;">
+          <img class="profile-photo" src="{% static 'images/1000009334-e1721059406388-300x238.jpg' %}" alt="Cori McNicol" width="200">
+          <strong>Cori McNicol — Shipping/VSM/WAWF</strong>
+          <p>Cori has 20+ years of experience in administration duties and data entry in the construction industry. Her experience, efficiency and attention to detail has been a great addition to the STATZ team.</p>
+        </div>
+      </div>
+
+      <!-- ─── PROCUREMENT ─── -->
+      <div class="profile-row animate-on-scroll">
+        <div class="profile-label">
+          <div class="inner-box">
+            <h2>Procurement</h2>
+            <p>The procurement team is the group that creates opportunities for STATZ Corporation and generates Request for Quotes to our suppliers. The work that is accomplished here has continued to allow STATZ Corporation to grow.</p>
+          </div>
+        </div>
+        <div class="profile-desc">
+          <img class="profile-photo" src="{% static 'images/processed-A10CAEB7-DD99-461E-93FB-DB3D61DF49B8-e1757505169932-300x282.jpeg' %}" alt="Jennifer Cutsinger" width="190">
+          <strong>Jennifer Cutsinger, Procurement Lead</strong>
+          <p>Jennifer brings a strong background in both construction and healthcare administration, with experience supporting project teams, managing documentation, and maintaining compliance in fast-paced environments. Known for her attention to detail and reliability, she excels in organizing records, streamlining workflows, and supporting cross-functional teams with precision.</p>
+          <br style="clear:both;">
+          <img class="profile-photo-right" src="{% static 'images/processed-C311FC0E-8F8C-46F4-98CF-8E472586F69D-e1770833481504-273x300.jpeg' %}" alt="Luke Hanson" width="180">
+          <strong>Luke Hanson, Procurement Admin</strong>
+          <p>Luke graduated from the University of Wisconsin–Whitewater with a degree in Communications and supports the company's business development efforts. He brings strong attention to detail, a dedicated work ethic, and a professional, outgoing personality to his role. Luke is known for clear communication, relationship building, and contributing to the company's continued growth.</p>
+          <br style="clear:both;">
+          <img class="profile-photo" src="{% static 'images/processed-A1A6A1E6-8728-4047-9B96-ACD084EBF861-e1770833235618-300x300.jpeg' %}" alt="Mandy Petrouske" width="180">
+          <strong>Mandy Petrouske, Procurement Admin</strong>
+          <p>Mandy supports the sales team with efficient sourcing and strong vendor coordination. With over three years of experience in data management and more than fifteen years in customer relations, she combines accuracy, speed, and a service-driven approach in every procurement task. Her background in healthcare and pharmaceuticals has given her a strong foundation in regulated environments, where attention to detail and compliance are critical. Mandy is known for her effectiveness, problem-solving skills, and commitment to delivering dependable customer service.</p>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="middle-bottom-title animate-on-scroll">
+        <h6><a href="{% url 'public:about_us' %}">More About STATZ Corporation &rarr;</a></h6>
+      </div>
+
+    </div>
+  </main>
+{% endblock %}

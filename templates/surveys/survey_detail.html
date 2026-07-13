@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ survey.title }} — STATZ Corporation{% endblock %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>{{ survey.title }}</h2>
+      <p>Please take a few moments to provide your feedback.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li><a href="{% url 'surveys:list' %}">Surveys</a></li>
+          <li>{{ survey.title }}</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Safe &amp; Compliant Feedback Channels</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="page-content">
+    <div class="container" style="max-width:800px;">
+
+      <div class="animate-on-scroll" style="background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 40px 30px; box-shadow: 0 4px 20px rgba(0,0,0,.05);">
+        {% if survey.description %}
+          <div style="color: var(--gray-mid); font-size: 15px; line-height: 1.7; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+            {{ survey.description|linebreaks }}
+          </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'surveys:detail' survey.pk %}">
+          {% csrf_token %}
+
+          {% for question in questions %}
+            <div style="margin-bottom: 28px;">
+              <label style="display: block; font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--navy); margin-bottom: 8px; text-transform: uppercase;">
+                {{ question.text }} {% if question.required %}<span style="color: var(--red);">*</span>{% endif %}
+              </label>
+
+              {% if question.question_type == 'TEXT' %}
+                <input type="text" name="question_{{ question.pk }}" {% if question.required %}required{% endif %}
+                  style="width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: 'Open Sans', sans-serif; font-size: 14px;">
+
+              {% elif question.question_type == 'PARAGRAPH' %}
+                <textarea name="question_{{ question.pk }}" {% if question.required %}required{% endif %} rows="5"
+                  style="width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: 'Open Sans', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+
+              {% elif question.question_type == 'CHOICE' %}
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                  {% for choice in question.choices.all %}
+                    <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--gray-dark); cursor: pointer;">
+                      <input type="radio" name="question_{{ question.pk }}" value="{{ choice.text }}" {% if question.required %}required{% endif %}
+                        style="width: 18px; height: 18px; accent-color: var(--red);">
+                      {{ choice.text }}
+                    </label>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 24px; display: flex; gap: 16px;">
+            <button type="submit" style="background: var(--red); color: var(--white); border: none; padding: 12px 30px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+              Submit Survey
+            </button>
+            <a href="{% url 'surveys:list' %}" style="display: inline-block; background: var(--gray-light); color: var(--gray-mid); border: 1px solid var(--border); padding: 12px 30px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; border-radius: 4px; text-align: center; transition: background 0.2s;">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </main>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Surveys — STATZ Corporation{% endblock %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>Surveys</h2>
+      <p>Your feedback is vital to our mission of serving the warfighter.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>Surveys</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Safe &amp; Compliant Feedback Channels</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="page-content">
+    <div class="container" style="max-width:800px;">
+
+      <div class="middle-top animate-on-scroll" style="margin-bottom: 40px;">
+        <h2>Active Feedback <strong>Surveys</strong></h2>
+        <p style="margin-top: 10px; font-size: 14px; color: var(--gray-mid);">
+          STATZ Corporation operates under strict compliance. None of the surveys hosted here request, process, or display Controlled Unclassified Information (CUI), Controlled Technical Information (CTI), or Covered Defense Information (CDI). All submissions are transmitted securely.
+        </p>
+      </div>
+
+      <div class="animate-on-scroll">
+        {% if surveys %}
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            {% for survey in surveys %}
+              <div style="background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 24px 30px; box-shadow: 0 2px 10px rgba(0,0,0,.05); transition: transform 0.25s, box-shadow 0.25s;">
+                <h3 style="font-size: 20px; color: var(--navy); margin-bottom: 8px;">{{ survey.title }}</h3>
+                {% if survey.description %}
+                  <p style="color: var(--gray-mid); font-size: 14px; line-height: 1.6; margin-bottom: 16px;">{{ survey.description }}</p>
+                {% endif %}
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 16px;">
+                  <span style="font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 0.5px;">Released: {{ survey.created_at|date:"F j, Y" }}</span>
+                  <a href="{% url 'surveys:detail' survey.pk %}" style="display: inline-block; background: var(--navy); color: var(--white); padding: 8px 20px; border-radius: 4px; font-family: 'Oswald', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s;">
+                    Take Survey &rarr;
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align: center; padding: 60px 0; background: var(--gray-light); border-radius: 8px; border: 1px dashed var(--border);">
+            <p style="font-size: 16px; color: var(--gray-mid); margin: 0;">There are currently no active public surveys available.</p>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </main>
+{% endblock %}

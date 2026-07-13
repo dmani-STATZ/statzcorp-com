@@ -1,0 +1,21 @@
+# ── Core ──────────────────────────────────────────────────
+Django==5.2.*
+whitenoise[brotli]==6.9.*     # Serves static files; no CDN needed in GCCH
+python-decouple==3.8.*        # Pulls settings from .env / Azure App Settings
+
+# ── Database ──────────────────────────────────────────────
+psycopg2-binary==2.9.*        # PostgreSQL (swap for pyodbc if using Azure SQL)
+
+# ── Forms & UI ────────────────────────────────────────────
+django-crispy-forms==2.4.*
+crispy-bootstrap5==2024.10.*
+
+# ── File handling ─────────────────────────────────────────
+Pillow==11.*                  # Image field support
+
+# ── Azure & Auth (add when ready for internal views) ──────
+# msal==1.31.*                # Microsoft Authentication Library
+# django-microsoft-identity-web  # Entra ID SSO for GCCH
+
+# ── Production WSGI server ────────────────────────────────
+gunicorn==23.*                # Used by Azure App Service startup command
