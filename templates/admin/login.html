@@ -1,0 +1,23 @@
+{% extends "admin/login.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div id="site-name" class="statz-admin-branding">
+  <a href="{% url 'admin:index' %}" class="statz-admin-branding__link">
+    <img
+      src="{% static 'images/StatzCorpColorFINAL.png' %}"
+      alt="STATZ Corporation"
+      class="statz-admin-branding__logo"
+    >
+    <span class="statz-admin-branding__title">{{ site_header|default:_('STATZ Corporation Administration') }}</span>
+  </a>
+</div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}

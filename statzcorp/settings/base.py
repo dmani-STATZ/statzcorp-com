@@ -131,6 +131,10 @@ if AZURE_CONNECTION_STRING:
         'BACKEND': 'storages.backends.azure_storage.AzureStorage',
     }
 
+# Large media uploads (videos) via Django admin
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 1024      # 1 GB request cap
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024        # >10 MB streams to temp file
+
 # ── Default primary key ───────────────────────────────────────────────────────
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

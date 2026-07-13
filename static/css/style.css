@@ -1175,6 +1175,98 @@ hr.section-divider {
   color: rgba(255,255,255,.55);
 }
 
+.footer-login-link {
+  color: rgba(255, 255, 255, 0.4);
+  margin-left: 12px;
+  font-size: 12px;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.footer-login-link:hover,
+.footer-login-link:focus-visible {
+  color: var(--accent);
+}
+
+/* ==================================================
+   DJANGO ADMIN LOGIN (STATZ branding)
+================================================== */
+body.login {
+  background: linear-gradient(160deg, var(--primary-dark) 0%, var(--navy-mid) 55%, var(--primary) 100%);
+}
+
+body.login #header {
+  background: transparent;
+  color: var(--white);
+  border-bottom: none;
+}
+
+body.login #container {
+  background: transparent;
+}
+
+body.login #content {
+  background: transparent;
+}
+
+.statz-admin-branding {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 0 4px;
+}
+
+.statz-admin-branding__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--white);
+}
+
+.statz-admin-branding__logo {
+  max-width: 180px;
+  height: auto;
+  display: block;
+}
+
+.statz-admin-branding__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--white);
+  text-align: center;
+}
+
+body.login #login-form {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 24px 20px;
+}
+
+body.login .submit-row input {
+  background: var(--primary);
+  border-color: var(--primary-dark);
+}
+
+body.login .submit-row input:hover,
+body.login .submit-row input:focus {
+  background: var(--primary-dark);
+}
+
+body.login a:link,
+body.login a:visited {
+  color: var(--accent);
+}
+
+body.login a:hover {
+  color: var(--accent-soft);
+}
+
 /* ==================================================
    BACK TO TOP
 ================================================== */

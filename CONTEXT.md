@@ -80,8 +80,12 @@ Browser
 
 - **Current:** SQLite via `statzcorp/settings/base.py` defaults / `.env.example` (`django.db.backends.sqlite3`, file `db.sqlite3`, gitignored).
 - **Planned later:** Microsoft SQL Server (MSSQL). Transition notes live in `.env.example` and commented deps in `requirements.txt` (`mssql-django`, `pyodbc`). Not configured yet.
-- **Media / video files:** Local `FileSystemStorage` when `AZURE_CONNECTION_STRING` is unset; Azure Blob Storage (`storages.backends.azure_storage.AzureStorage`, GCCH-compatible connection string, container `media`) when set. Model: `VideoAsset` in `apps/videos/`.
+- **Media / video files:** Local `FileSystemStorage` when `AZURE_CONNECTION_STRING` is unset; Azure Blob Storage (`storages.backends.azure_storage.AzureStorage`, GCCH-compatible connection string, container `media`) when set. Model: `VideoAsset` in `apps/videos/`. Django caps large admin uploads at `DATA_UPLOAD_MAX_MEMORY_SIZE` = 1 GB (`statzcorp/settings/base.py`).
 - **Not used:** PostgreSQL — removed from project guidance and deps (owner-stated).
+
+**Admin:** Branded via `PublicConfig.ready()` + `templates/admin/login.html`. Public footer includes a discreet Log In link to `/admin/`.
+
+**Azure App Service / large video uploads:** Gunicorn’s `--timeout` may need to stay high enough for Blob uploads through admin (e.g. 300s or more). This is a deployment setting on the Azure startup command — `startup.sh` in-repo already uses `--timeout=600`; re-check if ops changes the Startup Command in the portal.
 
 **Email:** Console backend forced in `statzcorp/settings/local.py`. Production uses SMTP settings from env (Office 365 host defaults in `base.py` / `.env.example`).
 

@@ -54,7 +54,7 @@ Observed in the current codebase — match these when editing:
 - **CSS/JS (owner rule):** Custom CSS only. Active stylesheet/script are `static/css/style.css` and `static/js/main.js` (linked from `templates/base.html` via `{% static %}`). Put new styles in `static/css/style.css` (use existing `:root` variables: `--primary`, `--primary-dark`, `--accent`, `--navy`, etc. — `--red` / `--red-dark` no longer exist). Keep `<style>` blocks and inline styles in templates to a minimum — prefer classes in the shared CSS file. Fonts: Oswald + Open Sans via Google Fonts `@import` in `static/css/style.css`.
 - **No Tailwind. No Bootstrap. No crispy-forms.** Do not add Tailwind, Bootstrap CSS/JS, django-crispy-forms, utility-class frameworks, or CDN UI kits.
 - **Duplicate assets:** Root `css/style.css` and `js/main.js` are byte-identical to the `static/` copies and are also tracked in git. Templates do **not** reference the root copies. Prefer editing `static/` only; do not diverge the duplicates without human direction.
-- **Admin:** Models registered in `apps/contact/admin.py`, `apps/surveys/admin.py`, and `apps/videos/admin.py`.
+- **Admin:** Models registered in `apps/contact/admin.py`, `apps/surveys/admin.py`, and `apps/videos/admin.py`. Branding (`site_header` / `site_title` / `index_title`) is set in `apps.public.apps.PublicConfig.ready()`. Login template override: `templates/admin/login.html` (logo: `static/images/StatzCorpColorFINAL.png`). Superuser creation is a **manual operational step** (`python manage.py createsuperuser`) — never seed admin credentials in code, fixtures, or committed env files.
 - **Config:** `python-decouple` `config()` for secrets and env (`statzcorp/settings/base.py`).
 - **Database:** SQLite now (`django.db.backends.sqlite3`, default `db.sqlite3`). Plan to migrate to Microsoft SQL Server (MSSQL) later. Do not introduce PostgreSQL.
 - **Media storage:** Default `FileSystemStorage`. When `AZURE_CONNECTION_STRING` is set, `STORAGES['default']` switches to `storages.backends.azure_storage.AzureStorage` (GCCH). Always use `FieldFile.url` / `.url` — never concatenate `MEDIA_URL` with paths by hand.
@@ -65,6 +65,7 @@ Observed in the current codebase — match these when editing:
 ## Boundaries — Things Agents Must NOT Do
 
 - Do not commit `.env`, secrets, keys, or credentials (`.gitignore`, `.env.example` warnings).
+- Do not seed or hardcode Django superuser / staff credentials in code, fixtures, migrations, or docs with real passwords — create accounts manually with `createsuperuser`.
 - Do not commit, log, or print `AZURE_CONNECTION_STRING` (or any Azure storage secrets). Local development without that variable must keep working via `FileSystemStorage` — do not require Azure credentials for `runserver` / migrate.
 - Do not “fix” the Azure `media` container by disabling blob-level anonymous read without explicit human instruction — public blob read (not full container listing) is an intentional GCCH-compliant setup for marketing video delivery.
 - Do not commit large video files (`*.mp4` etc. gitignored; initial commit message: “Initial commit without large video file.”). Upload marketing videos through Django admin (`VideoAsset`) instead.
