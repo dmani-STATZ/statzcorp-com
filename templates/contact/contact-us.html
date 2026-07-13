@@ -24,7 +24,7 @@
     .contact-info-card svg {
       width: 28px;
       height: 28px;
-      fill: var(--red);
+      fill: var(--accent);
       flex-shrink: 0;
       margin-top: 2px;
     }
@@ -126,24 +126,24 @@
 
             <input type="text" id="contact-name" name="name" placeholder="Your Name *" required value="{{ form.name.value|default:'' }}">
             {% if form.name.errors %}
-              <div style="color:var(--red); font-size:12px; margin-top:-10px; margin-bottom:10px;">{{ form.name.errors|join:", " }}</div>
+              <div class="form-field-error">{{ form.name.errors|join:", " }}</div>
             {% endif %}
 
             <input type="text" id="contact-company" name="company" placeholder="Company Name (if applicable)" value="{{ form.company.value|default:'' }}">
 
             <input type="email" id="contact-email" name="email" placeholder="Email Address *" required value="{{ form.email.value|default:'' }}">
             {% if form.email.errors %}
-              <div style="color:var(--red); font-size:12px; margin-top:-10px; margin-bottom:10px;">{{ form.email.errors|join:", " }}</div>
+              <div class="form-field-error">{{ form.email.errors|join:", " }}</div>
             {% endif %}
 
             <input type="tel" id="contact-phone" name="phone" placeholder="Phone Number *" required value="{{ form.phone.value|default:'' }}">
             {% if form.phone.errors %}
-              <div style="color:var(--red); font-size:12px; margin-top:-10px; margin-bottom:10px;">{{ form.phone.errors|join:", " }}</div>
+              <div class="form-field-error">{{ form.phone.errors|join:", " }}</div>
             {% endif %}
 
             <textarea id="contact-message" name="message" placeholder="Comments and/or Questions *" required>{{ form.message.value|default:'' }}</textarea>
             {% if form.message.errors %}
-              <div style="color:var(--red); font-size:12px; margin-top:-10px; margin-bottom:10px;">{{ form.message.errors|join:", " }}</div>
+              <div class="form-field-error">{{ form.message.errors|join:", " }}</div>
             {% endif %}
 
             <button type="submit" id="submit-btn">Send Message</button>

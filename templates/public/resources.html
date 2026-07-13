@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resources — STATZ Corporation{% endblock %}
+
+{% block meta_description %}Guides for CAGE Code registration, Joint Certification Program (DD Form 2345), and military shipping/packaging preparation from STATZ Corporation.{% endblock %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>Resources</h2>
+      <p>Practical guides for suppliers navigating DoD registration, certification, and shipment requirements.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>Resources</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="resources-section">
+    <div class="container">
+
+      <div class="resources-intro animate-on-scroll">
+        <p>Doing business with the Department of Defense requires more than a competitive quote. Suppliers need the right entity identifiers, certifications, and packaging discipline to keep contracts on schedule. These guides summarize what STATZ Corporation sees every day in the defense supply chain—and how your team can prepare.</p>
+      </div>
+
+      <nav class="resources-jump-nav animate-on-scroll" aria-label="On this page">
+        <a href="#cage-code">CAGE Code Guide</a>
+        <a href="#jcp">Joint Certification Program</a>
+        <a href="#shipping">Shipping Checklist</a>
+      </nav>
+
+      <!-- ===== CAGE CODE ===== -->
+      <section id="cage-code" class="guide-section animate-on-scroll">
+        <h2>CAGE Code Guide</h2>
+        <p class="guide-lead">A Commercial and Government Entity (CAGE) code is a five-character identifier assigned to organizations that do business with the U.S. federal government, including the Department of Defense. Without an active CAGE code—and the SAM.gov registration behind it—suppliers cannot receive awards, process payments, or appear correctly in DoD contracting systems.</p>
+
+        <h3>Why suppliers need a CAGE code</h3>
+        <p>DoD solicitations, contract awards, Wide Area Workflow (WAWF/iRAPT) receiving reports, and many logistics systems key off the CAGE code. It uniquely identifies your legal entity and manufacturing or distribution location. If your CAGE data is inactive, incomplete, or out of date, awards and shipments can stall even when the product is ready.</p>
+
+        <div class="guide-callout">
+          <strong>Example format:</strong> STATZ Corporation’s CAGE code is <strong>3WGD1</strong>—five alphanumeric characters assigned through SAM registration for U.S. entities.
+        </div>
+
+        <h3>How to obtain and maintain a CAGE code</h3>
+        <ol>
+          <li><strong>Register in SAM.gov.</strong> Create or update your entity registration at <a href="https://sam.gov" target="_blank" rel="noopener">SAM.gov</a>. Registration is free. Provide accurate legal business name, physical address, banking (for payment), and NAICS/entity information.</li>
+          <li><strong>Receive your CAGE assignment.</strong> For U.S. entities, a CAGE code is assigned automatically as part of a successful SAM registration. You do not submit a separate CAGE application for domestic registration.</li>
+          <li><strong>Keep SAM active.</strong> SAM registrations require annual renewal. An expired SAM record effectively takes your CAGE offline for new awards and can disrupt payment and system access.</li>
+          <li><strong>Verify and update CAGE data.</strong> Confirm your CAGE record and request corrections through the Defense Logistics Agency (DLA) CAGE program at <a href="https://cage.dla.mil" target="_blank" rel="noopener">cage.dla.mil</a> when your legal name, address, or status changes.</li>
+        </ol>
+
+        <p>Treat CAGE maintenance as a standing compliance task—not a one-time setup. Align your SAM contacts, physical address, and banking details with the same entity you use on quotes and WAWF documents so contracting officers and paying offices can match records without delay.</p>
+      </section>
+
+      <!-- ===== JCP ===== -->
+      <section id="jcp" class="guide-section animate-on-scroll">
+        <h2>Joint Certification Program (JCP) Guide</h2>
+        <p class="guide-lead">The Joint Certification Program certifies U.S. and Canadian contractors to receive export-controlled unclassified technical data from the Department of Defense. Certification is requested on <strong>DD Form 2345</strong>—the Militarily Critical Technical Data Agreement.</p>
+
+        <h3>Who needs JCP certification</h3>
+        <p>Manufacturers, distributors, and other contractors that must access militarily critical technical data—drawings, specifications, or technical manuals that are unclassified but export-controlled—typically need an approved DD Form 2345 on file. If a solicitation or data package is restricted to JCP-certified recipients, your team cannot lawfully receive that data without certification.</p>
+
+        <h3>What DD Form 2345 is</h3>
+        <p>DD Form 2345 is the formal agreement between your organization and the U.S./Canadian governments acknowledging the handling requirements for militarily critical technical data. It identifies your company, data custodians, and the commitments you make to protect and control that information.</p>
+
+        <h3>Where to submit and what to expect</h3>
+        <ul>
+          <li><strong>Submission:</strong> Applications are processed through DLA Logistics Information Services / the JCP office. Start at the official program page: <a href="https://www.dla.mil/Logistics-Operations/Services/JCP/" target="_blank" rel="noopener">DLA Joint Certification Program</a>.</li>
+          <li><strong>Processing:</strong> Allow time for review after a complete package is submitted. Incomplete custodial information, missing signatures, or mismatched entity details are common causes of delay—verify your legal name and CAGE against SAM before you file.</li>
+          <li><strong>Renewal:</strong> JCP certification is typically valid for five years. Track your expiration date and renew before it lapses so access to controlled technical data is not interrupted mid-contract.</li>
+        </ul>
+
+        <p>If you are bidding work that references controlled drawings or specs, confirm JCP status early in the capture cycle. Waiting until after award to certify can put delivery schedules and data access at risk.</p>
+      </section>
+
+      <!-- ===== SHIPPING ===== -->
+      <section id="shipping" class="guide-section animate-on-scroll">
+        <h2>Shipping Preparation Checklist</h2>
+        <p class="guide-lead">Military shipments fail inspection for paperwork and packaging as often as for product quality. Use this checklist before material leaves your dock—especially when the contract invokes military marking, preservation, or WAWF acceptance.</p>
+
+        <h3>Labeling standards</h3>
+        <ul class="checklist">
+          <li>
+            <strong>MIL-STD-129 military marking</strong>
+            Apply marking for shipment and storage per MIL-STD-129 when the contract requires it: NSN/part number, quantity, contract/order numbers, CAGE, destination, and required bar codes in the correct format and placement.
+          </li>
+        </ul>
+
+        <h3>Packaging standards</h3>
+        <ul class="checklist">
+          <li>
+            <strong>MIL-STD-2073 preservation and packaging</strong>
+            When contractually required, package to the specified method and level. Do not substitute commercial packaging unless the contract explicitly allows it.
+          </li>
+        </ul>
+
+        <h3>Pallet specifications</h3>
+        <ul class="checklist">
+          <li>
+            <strong>Footprint and load</strong>
+            Use a standard 40&quot; × 48&quot; GMA pallet footprint unless the contract specifies otherwise. Observe weight limits, keep loads stable and square, and allow no overhang beyond the pallet edges.
+          </li>
+        </ul>
+
+        <h3>Required documentation</h3>
+        <ul class="checklist">
+          <li>
+            <strong>Packing list and acceptance documents</strong>
+            Include an accurate packing list with every shipment. Submit DD Form 250 / WAWF receiving report acceptance where the contract requires electronic acceptance before or concurrent with shipment.
+          </li>
+        </ul>
+
+        <h3>Common causes of delay or rejection</h3>
+        <ul class="checklist">
+          <li>
+            <strong>Missing or unreadable bar codes</strong>
+            Labels without required linear or 2D symbols, or codes that do not scan, are frequent grounds for rejection at receiving.
+          </li>
+          <li>
+            <strong>Wrong unit-of-issue packaging</strong>
+            Packaging that does not match the contract unit of issue (each, dozen, kit, etc.) creates count discrepancies and failed acceptance.
+          </li>
+          <li>
+            <strong>Unmarked hazardous materials</strong>
+            Hazmat shipments without proper identification, documentation, and marking will be held or refused. Confirm classification and markings before tendering to the carrier.
+          </li>
+        </ul>
+
+        <p>When in doubt, match the contract’s packaging data block and marking clauses line by line. STATZ routinely supports suppliers with military packaging, VSM shipping detail, and WAWF documentation so material clears receiving the first time.</p>
+      </section>
+
+      <!-- ===== CTA ===== -->
+      <div class="resources-cta animate-on-scroll">
+        <h2>Need help with registration, certification, or shipment prep?</h2>
+        <p>STATZ Corporation helps manufacturers and suppliers navigate DoD administrative, packaging, and documentation requirements so you can focus on production.</p>
+        <a class="btn-primary" href="{% url 'contact:contact_us' %}">Contact Us</a>
+      </div>
+
+    </div>
+  </main>
+{% endblock %}

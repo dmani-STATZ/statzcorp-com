@@ -87,10 +87,10 @@ document.addEventListener('DOMContentLoaded', function () {
       let valid = true;
       contactForm.querySelectorAll('[required]').forEach(function (field) {
         if (!field.value.trim()) {
-          field.style.borderColor = '#c9222a';
+          field.classList.add('field-error');
           valid = false;
         } else {
-          field.style.borderColor = '';
+          field.classList.remove('field-error');
         }
       });
 

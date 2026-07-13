@@ -46,11 +46,11 @@ python manage.py runserver
 Observed in the current codebase — match these when editing:
 
 - **Layout:** Django project package `statzcorp/`; apps under `apps/` (`public`, `contact`, `surveys`); project templates in `templates/`; served static assets in `static/` (`statzcorp/settings/base.py` `STATICFILES_DIRS`).
-- **URLs:** Each app sets `app_name`; root include in `statzcorp/urls.py`. Named routes like `public:index`, `contact:contact_us`, `surveys:list`.
+- **URLs:** Each app sets `app_name`; root include in `statzcorp/urls.py`. Named routes like `public:index`, `public:resources`, `contact:contact_us`, `surveys:list`.
 - **Views:** `apps.public` uses `TemplateView`; `apps.contact` uses `FormView`; `apps.surveys` mixes `ListView` + FBV (`survey_detail_view`).
 - **Models:** App models in `apps/*/models.py`. Surveys use abstract `ClassifiedModel` + `public_objects` manager (`apps/surveys/models.py`).
 - **Forms:** Contact uses `ModelForm` + honeypot field `website` (`apps/contact/forms.py`). Templates render fields manually with `{% csrf_token %}`. Style forms in `static/css/style.css`.
-- **CSS/JS (owner rule):** Custom CSS only. Active stylesheet/script are `static/css/style.css` and `static/js/main.js` (linked from `templates/base.html` via `{% static %}`). Put new styles in `static/css/style.css` (use existing `:root` variables: `--red`, `--navy`, etc.). Keep `<style>` blocks and inline styles in templates to a minimum — prefer classes in the shared CSS file. Fonts: Oswald + Open Sans via Google Fonts `@import` in `static/css/style.css`.
+- **CSS/JS (owner rule):** Custom CSS only. Active stylesheet/script are `static/css/style.css` and `static/js/main.js` (linked from `templates/base.html` via `{% static %}`). Put new styles in `static/css/style.css` (use existing `:root` variables: `--primary`, `--primary-dark`, `--accent`, `--navy`, etc. — `--red` / `--red-dark` no longer exist). Keep `<style>` blocks and inline styles in templates to a minimum — prefer classes in the shared CSS file. Fonts: Oswald + Open Sans via Google Fonts `@import` in `static/css/style.css`.
 - **No Tailwind. No Bootstrap. No crispy-forms.** Do not add Tailwind, Bootstrap CSS/JS, django-crispy-forms, utility-class frameworks, or CDN UI kits.
 - **Duplicate assets:** Root `css/style.css` and `js/main.js` are byte-identical to the `static/` copies and are also tracked in git. Templates do **not** reference the root copies. Prefer editing `static/` only; do not diverge the duplicates without human direction.
 - **Admin:** Models registered in `apps/contact/admin.py` and `apps/surveys/admin.py`.
@@ -84,7 +84,7 @@ No `CONTRIBUTING.md`, commit hooks, or CI checks found. Only one commit on `main
 ## Known Gotchas
 
 - **`DJANGO_SECRET_KEY` is required** even locally — `statzcorp/settings/base.py` calls `config('DJANGO_SECRET_KEY')` with no default; missing `.env` key crashes startup.
-- **Some templates still contain page-local `<style>` blocks** (e.g. `templates/contact/contact-us.html`, inline block in `templates/base.html`). Migrate those into `static/css/style.css` when touching those pages.
+- **Some templates still contain page-local `<style>` blocks** (e.g. `templates/contact/contact-us.html`, `templates/public/accreditations.html`). Django messages styles were moved out of `templates/base.html` into `static/css/style.css`. Migrate remaining template CSS when touching those pages.
 - **Survey GET may still load classified questions.** `survey_detail_view` fetches `survey.questions.all()` (default related manager). POST skips CUI/CTI/CDI; GET filtering is incomplete relative to the manager design (`apps/surveys/views.py` comment acknowledges this).
 - **Local media directory is absent.** `MEDIA_ROOT` is `BASE_DIR / 'media'` and `media/` is gitignored; directory not present on disk until created.
 - **Promo video is local-only.** `static/images/Team-Statz_Fine-Cut_02-16x9-.mp4` is ignored by `*.mp4` in `.gitignore`; templates may reference it but it will not be in git.

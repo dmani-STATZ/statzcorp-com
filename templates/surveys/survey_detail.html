@@ -49,7 +49,7 @@
           {% for question in questions %}
             <div style="margin-bottom: 28px;">
               <label style="display: block; font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--navy); margin-bottom: 8px; text-transform: uppercase;">
-                {{ question.text }} {% if question.required %}<span style="color: var(--red);">*</span>{% endif %}
+                {{ question.text }} {% if question.required %}<span style="color: var(--primary);">*</span>{% endif %}
               </label>
 
               {% if question.question_type == 'TEXT' %}
@@ -65,7 +65,7 @@
                   {% for choice in question.choices.all %}
                     <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--gray-dark); cursor: pointer;">
                       <input type="radio" name="question_{{ question.pk }}" value="{{ choice.text }}" {% if question.required %}required{% endif %}
-                        style="width: 18px; height: 18px; accent-color: var(--red);">
+                        style="width: 18px; height: 18px; accent-color: var(--primary);">
                       {{ choice.text }}
                     </label>
                   {% endfor %}
@@ -75,7 +75,7 @@
           {% endfor %}
 
           <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 24px; display: flex; gap: 16px;">
-            <button type="submit" style="background: var(--red); color: var(--white); border: none; padding: 12px 30px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+            <button type="submit" style="background: var(--primary); color: var(--white); border: none; padding: 12px 30px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
               Submit Survey
             </button>
             <a href="{% url 'surveys:list' %}" style="display: inline-block; background: var(--gray-light); color: var(--gray-mid); border: 1px solid var(--border); padding: 12px 30px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; border-radius: 4px; text-align: center; transition: background 0.2s;">

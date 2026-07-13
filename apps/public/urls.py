@@ -6,6 +6,7 @@ from .views import (
     CapabilitiesView,
     ProductsView,
     AccreditationsView,
+    ResourcesView,
 )
 
 app_name = 'public'
@@ -17,4 +18,5 @@ urlpatterns = [
     path('capabilities/', CapabilitiesView.as_view(), name='capabilities'),
     path('products/', ProductsView.as_view(), name='products'),
     path('accreditations/', AccreditationsView.as_view(), name='accreditations'),
+    path('resources/', ResourcesView.as_view(), name='resources'),
 ]

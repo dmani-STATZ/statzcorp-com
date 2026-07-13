@@ -18,3 +18,6 @@ class ProductsView(TemplateView):
 
 class AccreditationsView(TemplateView):
     template_name = 'public/accreditations.html'
+
+class ResourcesView(TemplateView):
+    template_name = 'public/resources.html'

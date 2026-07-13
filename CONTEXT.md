@@ -30,23 +30,24 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 | Area | Status | Evidence |
 |------|--------|----------|
 | Project settings split (base / local / production) | Done | `statzcorp/settings/` |
-| Marketing pages (home, about, team, products, capabilities, accreditations) | Done | `apps/public/`, `templates/public/` |
+| Marketing pages (home, about, team, products, capabilities, accreditations, resources) | Done | `apps/public/`, `templates/public/` |
 | Contact form → DB + email notification | Done | `apps/contact/` |
 | Surveys with classification field + public manager | Done | `apps/surveys/` |
 | Admin for contact messages and surveys | Done | `apps/*/admin.py` |
 | Custom site chrome + CSS/JS | Done | `templates/base.html`, `static/css/style.css`, `static/js/main.js` |
 | Env template for Azure/GCCH-oriented deploy | Documented | `.env.example`, `requirements.txt` comments |
 | Redesign / feature roadmap | Written, not implemented as code | `rebuild_migration_plan.md` |
+| Resources guides (CAGE / JCP / shipping) | Done | `public:resources`, `templates/public/resources.html`, nav/footer in `templates/base.html` |
+| Brand palette navy + gold | Done | `static/css/style.css` `:root` (`--primary`, `--accent`, …) |
 
 **Frontend styling decision (owner-stated):** Stick with project CSS in `static/css/style.css`. No Tailwind. No Bootstrap. No django-crispy-forms. Keep CSS in templates minimal; prefer classes defined in the shared stylesheet. Crispy/Bootstrap packages were removed from `requirements.txt` and `statzcorp/settings/base.py` with owner approval.
 
 **In progress / transitional:**
 
-- Visual identity still uses primary red `#c9222a` in CSS (`static/css/style.css`); `rebuild_migration_plan.md` calls for navy + brass/gold shift — not applied yet.
+- None currently tracked for visual identity (navy/gold palette applied 2026-07-13).
 
 **Not started (roadmap only — `rebuild_migration_plan.md`):**
 
-- `/resources/` (CAGE / JCP / shipping guides)
 - `NewsPost` model / news engine
 - Microsoft Bookings embeds
 - Content rewrites (NSN/FSC emphasis, condensed history, team group-photo approach, cert PDF downloads)
@@ -95,7 +96,7 @@ Browser
 | **`public_objects`** | Custom manager on `ClassifiedModel` that excludes CUI/CTI/CDI (`apps/surveys/models.py`) |
 | **GCCH** | Azure Government Community Cloud High — stated target environment in settings/requirements comments |
 | **NSN / FSC** | National Stock Number / Federal Stock Class — domain terms in roadmap content for capabilities copy |
-| **JCP** | Joint Certification Program (DD Form 2345) — planned Resources page topic |
+| **JCP** | Joint Certification Program (DD Form 2345) — covered on the Resources page (`public:resources`) |
 | **Legacy static-site files** | `.gitignore` label for `php/`, `config/`, `composer.json` — not the active stack |
 | **Custom CSS stack** | Owner rule: style via `static/css/style.css` only — no Tailwind, no Bootstrap, no crispy-forms; minimize template-embedded CSS |
 | **SQLite to MSSQL** | Current DB is SQLite; planned production database is Microsoft SQL Server — not PostgreSQL |
@@ -104,9 +105,9 @@ Browser
 
 Only items with a concrete source:
 
-1. **Brand palette not migrated.** Live CSS still centers `--red: #c9222a`; plan says replace with navy/gold (`rebuild_migration_plan.md` §1 vs `static/css/style.css`).
-2. **Page-local CSS in templates.** Some templates (e.g. `templates/contact/contact-us.html`, inline blocks in `templates/base.html`) still embed `<style>`; preference is to consolidate into `static/css/style.css`.
-3. **Duplicate CSS/JS trees.** Root `css/` + `js/` identical to `static/` copies; risk of editing the wrong tree.
+1. **Brand palette migration complete in active assets.** Live `static/css/style.css` uses navy/gold (`--primary`, `--accent`, …). Untouched root `css/` / `js/` duplicates still contain legacy `#c9222a` / `--red` until Dion decides whether to delete or resync them.
+2. **Page-local CSS in some templates.** `templates/contact/contact-us.html` and `templates/public/accreditations.html` still embed `<style>` blocks; Django messages styles in `templates/base.html` were moved to `static/css/style.css` (`.site-message*`). Preference remains consolidating remaining template CSS into the shared stylesheet.
+3. **Duplicate CSS/JS trees.** Root `css/` + `js/` identical to `static/` copies at last full sync; risk of editing the wrong tree (and they have diverged after the 2026-07-13 palette work on `static/` only).
 4. **Survey detail GET vs classification.** `survey_detail_view` uses `survey.questions.all()`; POST skips classified questions, but GET does not filter via `public_objects` (`apps/surveys/views.py`).
 5. **Video asset not in git.** `*.mp4` ignored; commit message documents removing a large video from the initial commit.
 6. **No automated tests or CI.** Confirmed by absence of test modules and `.github/workflows`.
