@@ -6,10 +6,6 @@ python-decouple==3.8.*        # Pulls settings from .env / Azure App Settings
 # ── Database ──────────────────────────────────────────────
 psycopg2-binary==2.9.*        # PostgreSQL (swap for pyodbc if using Azure SQL)
 
-# ── Forms & UI ────────────────────────────────────────────
-django-crispy-forms==2.4.*
-crispy-bootstrap5==2024.10.*
-
 # ── File handling ─────────────────────────────────────────
 Pillow==11.*                  # Image field support
 

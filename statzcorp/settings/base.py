@@ -23,18 +23,13 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS = [
-    'crispy_forms',
-    'crispy_bootstrap5',
-]
-
 LOCAL_APPS = [
     'apps.public',
     'apps.contact',
     'apps.surveys',
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
 
 # ── Middleware ────────────────────────────────────────────────────────────────
 MIDDLEWARE = [
@@ -117,10 +112,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # ── Default primary key ───────────────────────────────────────────────────────
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# ── Crispy Forms ──────────────────────────────────────────────────────────────
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-CRISPY_TEMPLATE_PACK          = 'bootstrap5'
 
 # ── Email ─────────────────────────────────────────────────────────────────────
 EMAIL_BACKEND       = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
