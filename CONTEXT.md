@@ -36,6 +36,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 | Admin for contact messages and surveys | Done | `apps/*/admin.py` |
 | Custom site chrome + CSS/JS | Done | `templates/base.html`, `static/css/style.css`, `static/js/main.js` |
 | Env template for Azure/GCCH-oriented deploy | Documented | `.env.example`, `requirements.txt` comments |
+| Azure App Service (Linux) startup script | Done | `startup.sh` (collectstatic → migrate → gunicorn on `$PORT`) |
 | Redesign / feature roadmap | Written, not implemented as code | `rebuild_migration_plan.md` |
 | Resources guides (CAGE / JCP / shipping) | Done | `public:resources`, `templates/public/resources.html`, nav/footer in `templates/base.html` |
 | Brand palette navy + gold | Done | `static/css/style.css` `:root` (`--primary`, `--accent`, …) |
@@ -59,7 +60,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 - Root `css/` and `js/` — tracked; byte-identical to `static/css` and `static/js`; not referenced by Django templates.
 - `php/`, `config/`, `composer.json` — gitignored as “Legacy static-site files”; may exist on a developer machine but are not part of the git tree.
 
-**Missing tooling:** No README, no automated tests, no linter config, no CI workflows, no Azure pipeline files in-repo.
+**Missing tooling:** No README, no automated tests, no linter config, no CI workflows, no full Azure pipeline / App Service infrastructure-as-code in-repo. Azure Linux App Service startup is covered by checked-in `startup.sh` (set as Startup Command in the portal / CLI); ops must still configure App Settings (`DJANGO_SETTINGS_MODULE`, secrets, hosts, SMTP).
 
 ## Architecture Overview
 

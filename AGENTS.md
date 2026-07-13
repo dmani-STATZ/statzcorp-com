@@ -32,6 +32,7 @@ python manage.py runserver
 | System check | `python manage.py check` | Django |
 | Collect static | `python manage.py collectstatic` | Django + WhiteNoise (`statzcorp/settings/base.py`) |
 | Prod WSGI | `gunicorn` (listed for Azure App Service startup) | `requirements.txt` |
+| Azure startup | `startup.sh` (collectstatic → migrate → gunicorn) | Azure App Service Configuration → Startup Command |
 
 **Not configured — do not invent:**
 
@@ -88,5 +89,6 @@ No `CONTRIBUTING.md`, commit hooks, or CI checks found. Only one commit on `main
 - **Survey GET may still load classified questions.** `survey_detail_view` fetches `survey.questions.all()` (default related manager). POST skips CUI/CTI/CDI; GET filtering is incomplete relative to the manager design (`apps/surveys/views.py` comment acknowledges this).
 - **Local media directory is absent.** `MEDIA_ROOT` is `BASE_DIR / 'media'` and `media/` is gitignored; directory not present on disk until created.
 - **Promo video is local-only.** `static/images/Team-Statz_Fine-Cut_02-16x9-.mp4` is ignored by `*.mp4` in `.gitignore`; templates may reference it but it will not be in git.
-- **GCCH / Azure comments vs live deploy.** Deployment target is documented in `.env.example`, `requirements.txt`, and `production.py` comments; no Azure pipeline or App Service config files exist in this repo yet.
+- **GCCH / Azure deploy.** Deployment target is documented in `.env.example`, `requirements.txt`, and `production.py` comments. Checked-in `startup.sh` is the Azure App Service (Linux) Startup Command (collectstatic → migrate → gunicorn). No full Azure pipeline / App Service ARM/Bicep config in-repo yet — set Startup Command to `startup.sh` in the portal (or `az webapp config set --startup-file "startup.sh"`).
+- **SQLite on Azure App Service is ephemeral unless under `/home`.** Linux App Service only persists `/home`. Default `DB_NAME` (`BASE_DIR/db.sqlite3`) lives in the ephemeral app root and is lost on restart/redeploy. Point `DB_NAME` under `/home` via App Settings for persistence until the planned MSSQL migration. Flagged in `startup.sh`; do not change the DB engine without an explicit request.
 - **MSSQL not wired yet.** `.env.example` and `requirements.txt` only document the future MSSQL path; active engine is SQLite.
