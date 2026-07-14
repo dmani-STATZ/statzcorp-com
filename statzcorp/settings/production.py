@@ -18,18 +18,17 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # (ODBC driver, Encrypt, TrustServerCertificate, etc.) under human direction.
 DATABASES = {
     'default': {
-        'ENGINE': 'mssql',
+        'ENGINE': config('DB_ENGINE'),
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT', default='1433'),
         'OPTIONS': {
-            'driver': config('DB_ODBC_DRIVER', default='ODBC Driver 18 for SQL Server'),
-            'extra_params': config(
-                'DB_EXTRA_PARAMS',
-                default='Encrypt=yes;TrustServerCertificate=no',
-            ),
+                "driver": config('DB_ODBC_DRIVER', default= "ODBC Driver 17 for SQL Server"),
+                "timeout": 60,
+                "autocommit": True,
+                "extra_params": "Encrypt=yes;TrustServerCertificate=yes;MARS_Connection=Yes;Connection Timeout=60;",
         },
     }
 }
