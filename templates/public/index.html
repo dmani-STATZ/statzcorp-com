@@ -6,28 +6,48 @@
 {% block banner %}
   <!-- ===== HERO SLIDER ===== -->
   <section id="hero-slider" aria-label="Hero image slideshow">
-    <div class="slide active">
-      <img src="{% static 'images/slider-1.jpg' %}" alt="STATZ Corporation — Supply Chain Excellence">
-    </div>
-    <div class="slide">
-      <img src="{% static 'images/slider-2.jpg' %}" alt="STATZ Corporation — Defense and Government">
-    </div>
-    <div class="slide">
-      <img src="{% static 'images/slider-3.jpg' %}" alt="STATZ Corporation — Quality Manufacturing">
-    </div>
-    <div class="slide">
-      <img src="{% static 'images/slider-4.jpg' %}" alt="STATZ Corporation — SDVOSB Dealer">
-    </div>
+    {% if hero_slides %}
+      {% for slide in hero_slides %}
+        <div class="slide{% if forloop.first %} active{% endif %}">
+          <img src="{{ slide.image.url }}" alt="{{ slide.alt_text }}"{% if not forloop.first %} loading="lazy"{% endif %}>
+        </div>
+      {% endfor %}
 
-    <button class="slider-arrow prev" aria-label="Previous slide">&#8249;</button>
-    <button class="slider-arrow next" aria-label="Next slide">&#8250;</button>
+      {% if hero_slides|length > 1 %}
+        <button class="slider-arrow prev" aria-label="Previous slide">&#8249;</button>
+        <button class="slider-arrow next" aria-label="Next slide">&#8250;</button>
 
-    <div class="slider-controls">
-      <span class="slider-dot active" data-index="0"></span>
-      <span class="slider-dot" data-index="1"></span>
-      <span class="slider-dot" data-index="2"></span>
-      <span class="slider-dot" data-index="3"></span>
-    </div>
+        <div class="slider-controls">
+          {% for slide in hero_slides %}
+            <span class="slider-dot{% if forloop.first %} active{% endif %}" data-index="{{ forloop.counter0 }}"></span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% else %}
+      {# Fallback: legacy static slides when no published HeroSlide rows exist. #}
+      <div class="slide active">
+        <img src="{% static 'images/slider-1.jpg' %}" alt="STATZ Corporation — Supply Chain Excellence">
+      </div>
+      <div class="slide">
+        <img src="{% static 'images/slider-2.jpg' %}" alt="STATZ Corporation — Defense and Government">
+      </div>
+      <div class="slide">
+        <img src="{% static 'images/slider-3.jpg' %}" alt="STATZ Corporation — Quality Manufacturing">
+      </div>
+      <div class="slide">
+        <img src="{% static 'images/slider-4.jpg' %}" alt="STATZ Corporation — SDVOSB Dealer">
+      </div>
+
+      <button class="slider-arrow prev" aria-label="Previous slide">&#8249;</button>
+      <button class="slider-arrow next" aria-label="Next slide">&#8250;</button>
+
+      <div class="slider-controls">
+        <span class="slider-dot active" data-index="0"></span>
+        <span class="slider-dot" data-index="1"></span>
+        <span class="slider-dot" data-index="2"></span>
+        <span class="slider-dot" data-index="3"></span>
+      </div>
+    {% endif %}
   </section>
 {% endblock %}
 

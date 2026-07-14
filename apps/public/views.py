@@ -1,8 +1,15 @@
-from django.shortcuts import render
 from django.views.generic import TemplateView
+
+from .models import HeroSlide
+
 
 class IndexView(TemplateView):
     template_name = 'public/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hero_slides'] = HeroSlide.published_objects.all()
+        return context
 
 class AboutUsView(TemplateView):
     template_name = 'public/about-us.html'

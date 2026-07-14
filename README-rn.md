@@ -2,6 +2,7 @@
 
 ## 2026-07-14
 ### Added
+- Home page slideshow is now dynamic — slides can be added, removed, reordered, and published/unpublished from the Admin (Hero slides). Uploads are validated to landscape ratios 1.5–4.0, 2000×615 panoramic recommended, 1600px minimum width.
 - Added staff documentation: step-by-step guide for uploading, sharing, and embedding videos.
 ### Changed
 - Main navigation refreshed — centered menu, gold accent strip, and item separators.

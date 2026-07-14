@@ -35,35 +35,39 @@ document.addEventListener('DOMContentLoaded', function () {
   // ── HERO SLIDER ────────────────────────────────────────────────────────────
   const slider = document.getElementById('hero-slider');
   if (slider) {
-    const slides  = slider.querySelectorAll('.slide');
-    const dots    = slider.querySelectorAll('.slider-dot');
-    const prevBtn = slider.querySelector('.slider-arrow.prev');
-    const nextBtn = slider.querySelector('.slider-arrow.next');
-    let current   = 0;
-    let timer;
+    const slides = slider.querySelectorAll('.slide');
 
-    function goTo(index) {
-      slides[current].classList.remove('active');
-      dots[current] && dots[current].classList.remove('active');
-      current = (index + slides.length) % slides.length;
-      slides[current].classList.add('active');
-      dots[current] && dots[current].classList.add('active');
+    // Single slide (or none): leave the first .active as-is; no arrows/dots/timer.
+    if (slides.length >= 2) {
+      const dots    = slider.querySelectorAll('.slider-dot');
+      const prevBtn = slider.querySelector('.slider-arrow.prev');
+      const nextBtn = slider.querySelector('.slider-arrow.next');
+      let current   = 0;
+      let timer;
+
+      function goTo(index) {
+        slides[current].classList.remove('active');
+        dots[current] && dots[current].classList.remove('active');
+        current = (index + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dots[current] && dots[current].classList.add('active');
+      }
+
+      function startAuto() {
+        clearInterval(timer);
+        timer = setInterval(function () { goTo(current + 1); }, 5000);
+      }
+
+      goTo(0);
+      startAuto();
+
+      if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); startAuto(); });
+      if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); startAuto(); });
+
+      dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () { goTo(i); startAuto(); });
+      });
     }
-
-    function startAuto() {
-      clearInterval(timer);
-      timer = setInterval(function () { goTo(current + 1); }, 5000);
-    }
-
-    goTo(0);
-    startAuto();
-
-    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); startAuto(); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); startAuto(); });
-
-    dots.forEach(function (dot, i) {
-      dot.addEventListener('click', function () { goTo(i); startAuto(); });
-    });
   }
 
   // ── BACK TO TOP ────────────────────────────────────────────────────────────

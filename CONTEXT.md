@@ -68,7 +68,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 ```
 Browser
   → Django URLConf (statzcorp/urls.py)
-       → apps.public     TemplateViews → templates/public/*
+       → apps.public     TemplateViews → templates/public/* (+ HeroSlide admin hero slideshow)
        → apps.contact    FormView → ContactMessage DB + email to CONTACT_EMAIL_TO
        → apps.surveys    List/detail → Survey/Question/Submission/Answer
        → apps.videos     DetailView → VideoAsset (Blob Storage or local media)
@@ -80,7 +80,7 @@ Browser
 
 - **Current:** SQLite via `statzcorp/settings/base.py` defaults / `.env.example` (`django.db.backends.sqlite3`, file `db.sqlite3`, gitignored).
 - **Planned later:** Microsoft SQL Server (MSSQL). Transition notes live in `.env.example` and commented deps in `requirements.txt` (`mssql-django`, `pyodbc`). Not configured yet.
-- **Media / video files:** Local `FileSystemStorage` when `AZURE_CONNECTION_STRING` is unset; Azure Blob Storage (`storages.backends.azure_storage.AzureStorage`, GCCH-compatible connection string, container `media`) when set. Model: `VideoAsset` in `apps/videos/`. Django caps large admin uploads at `DATA_UPLOAD_MAX_MEMORY_SIZE` = 1 GB (`statzcorp/settings/base.py`).
+- **Media / video files:** Local `FileSystemStorage` when `AZURE_CONNECTION_STRING` is unset; Azure Blob Storage (`storages.backends.azure_storage.AzureStorage`, GCCH-compatible connection string, container `media`) when set. Models: `VideoAsset` in `apps/videos/`; `HeroSlide` in `apps/public/` (admin-managed home page hero slideshow images on the same Blob-or-local storage path). Django caps large admin uploads at `DATA_UPLOAD_MAX_MEMORY_SIZE` = 1 GB (`statzcorp/settings/base.py`). When zero published `HeroSlide` rows exist, `templates/public/index.html` falls back to the legacy static slider images so the hero never renders blank.
 - **Not used:** PostgreSQL — removed from project guidance and deps (owner-stated).
 
 **Admin:** Branded via `PublicConfig.ready()` + `templates/admin/login.html`. Public footer includes a discreet Log In link to `/admin/`. Staff retrieve public video Blob URLs and landing-page links from the VideoAsset admin **Share Links** fieldset (and the list-view Copy URL column) — not from the Azure portal.
