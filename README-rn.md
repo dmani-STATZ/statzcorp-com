@@ -2,6 +2,7 @@
 
 ## 2026-07-14
 ### Changed
+- Main navigation refreshed — centered menu, gold accent strip, and item separators.
 - Navigation menus now highlight in STATZ gold on hover. Video admin now displays copyable public video and landing-page URLs — no Azure portal access needed.
 
 ## 2026-07-13

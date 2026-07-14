@@ -42,7 +42,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 | Resources guides (CAGE / JCP / shipping) | Done | `public:resources`, `templates/public/resources.html`, nav/footer in `templates/base.html` |
 | Brand palette navy + gold | Done | `static/css/style.css` `:root` (`--primary`, `--accent`, …) |
 
-**Frontend styling decision (owner-stated):** Stick with project CSS in `static/css/style.css`. No Tailwind. No Bootstrap. No django-crispy-forms. Keep CSS in templates minimal; prefer classes defined in the shared stylesheet. Crispy/Bootstrap packages were removed from `requirements.txt` and `statzcorp/settings/base.py` with owner approval.
+**Frontend styling decision (owner-stated):** Stick with project CSS in `static/css/style.css`. No Tailwind. No Bootstrap. No django-crispy-forms. Keep CSS in templates minimal; prefer classes defined in the shared stylesheet. Crispy/Bootstrap packages were removed from `requirements.txt` and `statzcorp/settings/base.py` with owner approval. Main nav (`.nav-inner`) is centered (`justify-content: center`) — was `flex-end` from the legacy static design.
 
 **In progress / transitional:**
 

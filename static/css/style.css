@@ -60,7 +60,7 @@ h1, h2, h3, h4, h5, h6 {
 ================================================== */
 #site-header {
   background: var(--white);
-  border-bottom: 3px solid var(--primary);
+  border-bottom: 4px solid var(--accent);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -150,7 +150,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-inner {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   padding: 0 20px;
   position: relative;
 }
@@ -166,9 +166,13 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 
+.nav-menu > li + li {
+  border-left: 1px solid rgba(255, 255, 255, 0.22);
+}
+
 .nav-menu > li > a {
   display: block;
-  padding: 14px 20px;
+  padding: 14px 32px;
   font-family: 'Oswald', sans-serif;
   font-size: 14px;
   font-weight: 400;
@@ -1605,6 +1609,10 @@ body.login a:hover {
     z-index: 999;
   }
   .nav-menu.open { display: flex; }
+  .nav-menu > li + li {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
   .nav-menu > li > a { padding: 12px 20px; }
   .nav-menu .sub-menu { position: static; border-top: none; }
   .nav-menu .sub-menu li a { padding-left: 36px; }
