@@ -1,5 +1,9 @@
 # STATZ Corporation Website — Release Notes
 
+## 2026-07-14
+### Changed
+- Navigation menus now highlight in STATZ gold on hover. Video admin now displays copyable public video and landing-page URLs — no Azure portal access needed.
+
 ## 2026-07-13
 ### Added
 - Admin portal branded for STATZ with a footer Log In link; staff can now manage videos, surveys, and contact messages from one place.

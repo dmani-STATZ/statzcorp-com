@@ -83,7 +83,7 @@ Browser
 - **Media / video files:** Local `FileSystemStorage` when `AZURE_CONNECTION_STRING` is unset; Azure Blob Storage (`storages.backends.azure_storage.AzureStorage`, GCCH-compatible connection string, container `media`) when set. Model: `VideoAsset` in `apps/videos/`. Django caps large admin uploads at `DATA_UPLOAD_MAX_MEMORY_SIZE` = 1 GB (`statzcorp/settings/base.py`).
 - **Not used:** PostgreSQL — removed from project guidance and deps (owner-stated).
 
-**Admin:** Branded via `PublicConfig.ready()` + `templates/admin/login.html`. Public footer includes a discreet Log In link to `/admin/`.
+**Admin:** Branded via `PublicConfig.ready()` + `templates/admin/login.html`. Public footer includes a discreet Log In link to `/admin/`. Staff retrieve public video Blob URLs and landing-page links from the VideoAsset admin **Share Links** fieldset (and the list-view Copy URL column) — not from the Azure portal.
 
 **Azure App Service / large video uploads:** Gunicorn’s `--timeout` may need to stay high enough for Blob uploads through admin (e.g. 300s or more). This is a deployment setting on the Azure startup command — `startup.sh` in-repo already uses `--timeout=600`; re-check if ops changes the Startup Command in the portal.
 

@@ -180,8 +180,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav-menu > li > a:hover,
 .nav-menu > li.active > a {
-  background: var(--primary);
-  color: var(--white);
+  background: var(--accent);
+  color: var(--navy);
 }
 
 /* Dropdown */
@@ -194,7 +194,7 @@ h1, h2, h3, h4, h5, h6 {
   min-width: 180px;
   box-shadow: var(--shadow);
   z-index: 999;
-  border-top: 3px solid var(--primary);
+  border-top: 3px solid var(--accent);
 }
 
 .nav-menu > li:hover .sub-menu { display: block; }
@@ -209,8 +209,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-menu .sub-menu li a:hover {
-  background: var(--primary);
-  color: var(--white);
+  background: var(--accent);
+  color: var(--navy);
 }
 
 /* Hamburger */
@@ -1601,7 +1601,7 @@ body.login a:hover {
     left: 0;
     right: 0;
     background: var(--navy);
-    border-top: 2px solid var(--primary);
+    border-top: 2px solid var(--accent);
     z-index: 999;
   }
   .nav-menu.open { display: flex; }
