@@ -91,7 +91,7 @@ Browser
 
 **Auth for public site:** Anonymous public pages. Optional `Submission.user` FK if authenticated. Entra ID / MSAL packages are commented out in `requirements.txt` (“add when ready for internal views”) — not active.
 
-**Deeper docs:** Product/design roadmap → `rebuild_migration_plan.md`. Agent operating rules → `AGENTS.md`.
+**Documentation:** Staff guide for uploading, sharing, and embedding videos → [`docs/how-to-add-videos.md`](docs/how-to-add-videos.md) (canonical). Product/design roadmap → `rebuild_migration_plan.md`. Agent operating rules → `AGENTS.md`.
 
 ## Terminology / Glossary
 

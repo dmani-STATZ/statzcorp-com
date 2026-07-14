@@ -1,6 +1,8 @@
 # STATZ Corporation Website — Release Notes
 
 ## 2026-07-14
+### Added
+- Added staff documentation: step-by-step guide for uploading, sharing, and embedding videos.
 ### Changed
 - Main navigation refreshed — centered menu, gold accent strip, and item separators.
 - Navigation menus now highlight in STATZ gold on hover. Video admin now displays copyable public video and landing-page URLs — no Azure portal access needed.

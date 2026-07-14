@@ -59,6 +59,7 @@ Observed in the current codebase — match these when editing:
 - **Database:** SQLite now (`django.db.backends.sqlite3`, default `db.sqlite3`). Plan to migrate to Microsoft SQL Server (MSSQL) later. Do not introduce PostgreSQL.
 - **Media storage:** Default `FileSystemStorage`. When `AZURE_CONNECTION_STRING` is set, `STORAGES['default']` switches to `storages.backends.azure_storage.AzureStorage` (GCCH). Always use `FieldFile.url` / `.url` — never concatenate `MEDIA_URL` with paths by hand.
 - **New public page:** Add view in `apps/public/views.py`, route in `apps/public/urls.py`, template under `templates/public/`, styles in `static/css/style.css`, nav link in `templates/base.html` if discoverable. For shareable videos use `apps/videos/` instead.
+- **Video docs stay in sync:** When video-related functionality changes (model fields, admin layout, template tag signature), update [`docs/how-to-add-videos.md`](docs/how-to-add-videos.md) in the same change.
 
 > Not yet established. Do not assume — confirm with Dion (IT & Manufacturing Operations) before acting: Python formatting/lint rules; whether to delete root `css/` / `js/` duplicates.
 
