@@ -22,6 +22,11 @@ fi
 echo "=== STATZ Corp: starting deployment tasks ==="
 echo "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 
+# Ensure persistent SQLite parent dir exists when DB_NAME is under /home.
+# Safe no-op if unused; avoids migrate() failing on a fresh App Service
+# instance where /home/data does not exist yet.
+mkdir -p /home/data
+
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 

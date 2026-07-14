@@ -54,7 +54,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 - Microsoft Bookings embeds
 - Content rewrites (NSN/FSC emphasis, condensed history, team group-photo approach, cert PDF downloads)
 - LinkedIn / video production program (mostly off-site)
-- Migrate database from SQLite to Microsoft SQL Server (MSSQL) — packages/settings only stubbed in comments
+- Migrate database from SQLite to Microsoft SQL Server (MSSQL) — attempted 2026-07-14 and reverted; blocked on ODBC Driver 18 persistence on App Service Linux and VNet Integration to the private DB host (not just Django config). Packages/settings remain stubbed in comments for resume.
 
 **Legacy / non-Django leftovers:**
 

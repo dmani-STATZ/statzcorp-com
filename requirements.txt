@@ -6,9 +6,12 @@ django-storages[azure]>=1.14  # Azure Blob Storage for video/media uploads (GCCH
 
 # ── Database ──────────────────────────────────────────────
 # Current: SQLite (built into Python / Django — no extra package).
-# Future (MSSQL): uncomment when migrating to Microsoft SQL Server:
-mssql-django>=1.7.3
-pyodbc>=5.3.0
+# Future (MSSQL): uncomment when migrating to Microsoft SQL Server.
+# Attempted 2026-07-14 and reverted — do not re-enable until BOTH blockers
+# in statzcorp/settings/production.py are resolved (ODBC Driver 18
+# persistence on App Service Linux + VNet Integration to private DB host):
+# mssql-django==1.*
+# pyodbc==5.*
 
 # ── File handling ─────────────────────────────────────────
 Pillow==11.*                  # Image field support
