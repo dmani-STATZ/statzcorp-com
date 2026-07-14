@@ -31,7 +31,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 |------|--------|----------|
 | Project settings split (base / local / production) | Done | `statzcorp/settings/` |
 | Marketing pages (home, about, team, products, capabilities, accreditations, resources) | Done | `apps/public/`, `templates/public/` |
-| Contact form → DB + email notification | Done | `apps/contact/` |
+| Contact form → DB + email notification | Done | `apps/contact/` — `ContactMessage` + admin-managed `ContactRecipient` list (queried at send-time); `CONTACT_EMAIL_TO` is a comma-separated fallback only when no active recipients exist |
 | Surveys with classification field + public manager | Done | `apps/surveys/` |
 | Video hosting (Azure Blob / local filesystem) | Done | `apps/videos/` — `VideoAsset`, public `/videos/<slug>/`, admin upload |
 | Admin for contact messages and surveys | Done | `apps/*/admin.py` |
@@ -69,7 +69,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 Browser
   → Django URLConf (statzcorp/urls.py)
        → apps.public     TemplateViews → templates/public/* (+ HeroSlide admin hero slideshow)
-       → apps.contact    FormView → ContactMessage DB + email to CONTACT_EMAIL_TO
+       → apps.contact    FormView → ContactMessage DB + email to ContactRecipient (fallback: CONTACT_EMAIL_TO)
        → apps.surveys    List/detail → Survey/Question/Submission/Answer
        → apps.videos     DetailView → VideoAsset (Blob Storage or local media)
        → /admin/         Django admin
@@ -128,6 +128,6 @@ Only items with a concrete source:
 |------|-----|--------|
 | Primary technical / IT & Manufacturing Operations contact for this site | **Dion** | `rebuild_migration_plan.md` (Bookings: “Dion (IT & Manufacturing Operations)”); GitHub remote org/user `dmani-STATZ`; local workspace owner |
 | Accounting & Contract Administration (Bookings targets in plan) | Jenny / Chad | `rebuild_migration_plan.md` only — not encoded in app config |
-| Public contact inbox (runtime) | `CONTACT_EMAIL_TO` (default `info@statzcorp.com`) | `statzcorp/settings/base.py`, `.env.example` |
+| Public contact inbox (runtime) | Admin-managed `ContactRecipient` rows; `CONTACT_EMAIL_TO` is comma-separated fallback only (default `info@statzcorp.com`) | `apps/contact/`, `statzcorp/settings/base.py`, `.env.example` |
 
 > Not yet established. Do not assume — confirm with Dion before acting: formal product-owner vs. developer split; production Azure subscription/App Service names; who approves content vs. infrastructure changes.

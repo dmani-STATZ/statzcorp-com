@@ -4,9 +4,11 @@
 ### Added
 - Home page slideshow is now dynamic — slides can be added, removed, reordered, and published/unpublished from the Admin (Hero slides). Uploads are validated to landscape ratios 1.5–4.0, 2000×615 panoramic recommended, 1600px minimum width.
 - Added staff documentation: step-by-step guide for uploading, sharing, and embedding videos.
+- **Contact form notification recipients are now admin-managed.** Staff with Django admin access can add, remove, or temporarily disable who receives contact form email notifications — under Contact > Contact Notification Recipients — without any code change or app restart. The `CONTACT_EMAIL_TO` environment variable now acts as a fallback only, used if no active recipients are configured in admin.
 ### Changed
 - Main navigation refreshed — centered menu, gold accent strip, and item separators.
 - Navigation menus now highlight in STATZ gold on hover. Video admin now displays copyable public video and landing-page URLs — no Azure portal access needed.
+
 
 ## 2026-07-13
 ### Added

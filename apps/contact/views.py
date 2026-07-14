@@ -4,11 +4,34 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ContactForm
+from .models import ContactRecipient
+
 
 class ContactUsView(FormView):
     template_name = 'contact/contact-us.html'
     form_class = ContactForm
     success_url = '/contact-us/'
+
+    def get_recipient_list(self):
+        """
+        Returns the live list of active contact notification recipients.
+        Queried fresh on every call — no caching, so admin changes to
+        ContactRecipient take effect immediately without an app restart.
+        Falls back to settings.CONTACT_EMAIL_TO if no active recipients exist.
+        """
+        active_emails = list(
+            ContactRecipient.objects.filter(is_active=True).values_list('email', flat=True)
+        )
+        if active_emails:
+            return active_emails
+
+        import logging
+        logger = logging.getLogger('apps')
+        logger.warning(
+            "No active ContactRecipient rows found — falling back to settings.CONTACT_EMAIL_TO. "
+            "Configure recipients in Django admin under Contact > Contact Notification Recipients."
+        )
+        return settings.CONTACT_EMAIL_TO
 
     def form_valid(self, form):
         # Save to database
@@ -27,18 +50,18 @@ class ContactUsView(FormView):
             f"{message_obj.message}\n"
         )
 
+        recipient_list = self.get_recipient_list()
+
         try:
-            # Send notification email
             send_mail(
                 subject=subject,
                 message=body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.CONTACT_EMAIL_TO],
+                recipient_list=recipient_list,
                 fail_silently=False,
             )
             messages.success(self.request, "Thank you! Your message has been received. We will be in touch shortly.")
         except Exception as e:
-            # Log error
             import logging
             logger = logging.getLogger('apps')
             logger.error(f"Email sending failed: {e}")

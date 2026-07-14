@@ -147,7 +147,11 @@ EMAIL_USE_TLS       = config('EMAIL_USE_TLS', default=True,  cast=bool)
 EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL  = config('DEFAULT_FROM_EMAIL',  default='noreply@statzcorp.com')
-CONTACT_EMAIL_TO    = config('CONTACT_EMAIL_TO',    default='info@statzcorp.com')
+CONTACT_EMAIL_TO = [
+    addr.strip()
+    for addr in config('CONTACT_EMAIL_TO', default='info@statzcorp.com').split(',')
+    if addr.strip()
+]
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 LOGGING = {
