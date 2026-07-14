@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static video_tags %}
 
 {% block title %}About Us — STATZ Corporation{% endblock %}
 
@@ -35,13 +35,13 @@
   <main class="page-content">
     <div class="container">
 
-      <!-- Intro video -->
-      <div class="video-wrap animate-on-scroll">
-        <video controls preload="metadata" poster="{% static 'images/about-thumb.jpg' %}">
-          <source src="{% static 'images/Team-Statz_Fine-Cut_02-16x9-.mp4' %}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
+      <!-- Intro video (VideoAsset slug must match admin; missing/unpublished → section omitted) -->
+      {% get_video 'team-statz' as team_video %}
+      {% if team_video %}
+        <div class="animate-on-scroll">
+          {% include 'videos/_video_embed.html' with video=team_video inline_player=True %}
+        </div>
+      {% endif %}
 
       <p class="animate-on-scroll" style="margin-top:24px; font-size:16px; color:#555; line-height:1.85;">
         STATZ Corporation is a small business with a big reach capable of delivering many of your supply chain needs while simultaneously helping you achieve your SDVOSB procurement goals!

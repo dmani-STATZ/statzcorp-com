@@ -118,7 +118,7 @@ Only items with a concrete source:
 2. **Page-local CSS in some templates.** `templates/contact/contact-us.html` and `templates/public/accreditations.html` still embed `<style>` blocks; Django messages styles in `templates/base.html` were moved to `static/css/style.css` (`.site-message*`). Preference remains consolidating remaining template CSS into the shared stylesheet.
 3. **Duplicate CSS/JS trees.** Root `css/` + `js/` identical to `static/` copies at last full sync; risk of editing the wrong tree (and they have diverged after the 2026-07-13 palette work on `static/` only).
 4. **Survey detail GET vs classification.** `survey_detail_view` uses `survey.questions.all()`; POST skips classified questions, but GET does not filter via `public_objects` (`apps/surveys/views.py`).
-5. **Legacy local promo video still ignored by git.** `*.mp4` remains gitignored. Marketing videos are now hosted via `VideoAsset` + Azure Blob (or local `MEDIA_ROOT` in dev) — do not commit large video binaries. The old static path `static/images/Team-Statz_Fine-Cut_02-16x9-.mp4` may still be referenced by About Us until that page is switched to a `VideoAsset` embed.
+5. **~~About Us legacy static MP4~~ (resolved).** About Us embeds via `{% get_video 'team-statz' %}` + `videos/_video_embed.html` (`apps/videos/templatetags/video_tags.py`). Missing/unpublished video omits the section (no 500). Standard pattern for page-embedded videos: `get_video` + `_video_embed.html` — never `{% static %}` for `.mp4`. `*.mp4` remains gitignored; upload via admin `VideoAsset`.
 6. **No automated tests or CI.** Confirmed by absence of test modules and `.github/workflows`.
 7. **MSSQL migration not implemented.** Only documented as future in `.env.example` / `requirements.txt` comments.
 
