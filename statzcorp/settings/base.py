@@ -154,6 +154,14 @@ CONTACT_EMAIL_TO = [
     if addr.strip()
 ]
 
+# ── Supplier Portal → STATZWeb API (Phase 1b) ─────────────────────────────────
+# Server-to-server only. Contract: docs/supplier-portal-api-contract.md
+# SUPPLIER_PORTAL_API_KEY / SUPPLIER_PORTAL_HMAC_SECRET must match the values
+# configured in STATZWeb's own environment. Never logged, never sent to a client.
+SUPPLIER_PORTAL_API_BASE_URL = config('SUPPLIER_PORTAL_API_BASE_URL', default='')
+SUPPLIER_PORTAL_API_KEY = config('SUPPLIER_PORTAL_API_KEY', default='')
+SUPPLIER_PORTAL_HMAC_SECRET = config('SUPPLIER_PORTAL_HMAC_SECRET', default='')
+
 # ── Logging ───────────────────────────────────────────────────────────────────
 LOGGING = {
     'version': 1,

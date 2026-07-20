@@ -47,12 +47,14 @@ Two layers, both required:
   the endpoints in this document — not general internal-API access.
 - Issued once, stored server-side only (Azure App Service application settings / Key Vault on
   the statzcorp-com side; equivalent secret store on the STATZWeb side to verify against).
+- **Env var name (both sides, values must match exactly):** `SUPPLIER_PORTAL_API_KEY`
 
 ### 2.2 Request signature (HMAC)
 
 Guards against a leaked API key alone being sufficient, and against replay.
 
 - Shared secret, separate from the API key, known only to both servers.
+- **Env var name (both sides, values must match exactly):** `SUPPLIER_PORTAL_HMAC_SECRET`
 - Canonical string to sign: `{method}\n{path}\n{timestamp}\n{body}` (body = raw JSON, empty
   string for GET).
 - `HMAC-SHA256(secret, canonical_string)`, hex-encoded.
@@ -62,6 +64,15 @@ Guards against a leaked API key alone being sufficient, and against replay.
 - STATZWeb rejects the request (`401`) if:
   - the signature doesn't match, or
   - `X-Timestamp` is more than 5 minutes from server time (replay window).
+
+### 2.4 Base URL
+
+- **Env var name (statzcorp-com side only):** `SUPPLIER_PORTAL_API_BASE_URL` — e.g.
+  `https://<statzweb-host>/api/supplier-portal/v1/`. STATZWeb doesn't need this value; it only
+  needs to actually serve the API at whatever path this points to.
+- Generate both shared secrets with `python -c "import secrets; print(secrets.token_urlsafe(48))"`
+  and copy the identical value into both projects' environment — never regenerate independently
+  per side, or the handshake breaks.
 
 ### 2.3 Network layer (recommended, not required to start)
 
