@@ -6,6 +6,7 @@ from django.utils import timezone
 
 LOCKOUT_THRESHOLD = 5
 LOCKOUT_DURATION = timedelta(minutes=15)
+RESET_REQUEST_COOLDOWN = timedelta(minutes=15)
 
 
 class SupplierPortalAccount(models.Model):
@@ -32,6 +33,7 @@ class SupplierPortalAccount(models.Model):
     failed_attempts = models.PositiveIntegerField(default=0, editable=False)
     locked_until = models.DateTimeField(null=True, blank=True, editable=False)
     last_login = models.DateTimeField(null=True, blank=True, editable=False)
+    last_reset_request_at = models.DateTimeField(null=True, blank=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -74,3 +76,16 @@ class SupplierPortalAccount(models.Model):
     def register_login(self):
         self.last_login = timezone.now()
         self.save(update_fields=['last_login', 'updated_at'])
+
+    def has_usable_password(self):
+        from django.contrib.auth.hashers import is_password_usable
+        return is_password_usable(self.password)
+
+    def can_request_reset(self):
+        if self.last_reset_request_at is None:
+            return True
+        return timezone.now() - self.last_reset_request_at >= RESET_REQUEST_COOLDOWN
+
+    def register_reset_request(self):
+        self.last_reset_request_at = timezone.now()
+        self.save(update_fields=['last_reset_request_at', 'updated_at'])

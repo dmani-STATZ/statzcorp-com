@@ -1,0 +1,26 @@
+{% extends 'supplier_portal/_portal_page.html' %}
+
+{% block title %}Confirm Your Email — STATZ Corporation{% endblock %}
+
+{% block header_tagline %}Request access or reset your password.{% endblock %}
+
+{% block card %}
+  <h3>Confirm Your Email</h3>
+  <p class="supplier-portal-lead">We have the following contact email on file for CAGE code <strong>{{ cage_code }}</strong>:</p>
+
+  <p class="supplier-portal-masked-email">{{ masked_email }}</p>
+
+  <p class="supplier-portal-lead">If this looks right, we'll send a secure set-password link to that address. The link expires in 1 hour.</p>
+
+  <form class="contact-form" method="post" action="{% url 'supplier_portal:send_password_link' %}">
+    {% csrf_token %}
+    <input type="hidden" name="cage_code" value="{{ cage_code }}">
+    <button type="submit">Yes, Send the Link</button>
+  </form>
+
+  <div class="supplier-portal-note">
+    <p><strong>Don't recognize this address?</strong> It may belong to a colleague, or our records may be out of date. If the address is wrong or unreachable, contact us at <a href="mailto:info@statzcorp.com">info@statzcorp.com</a> or 608-798-4500 and we'll update it after verifying your company details. For security, we can only send the link to the address already on file.</p>
+  </div>
+
+  <p class="supplier-portal-links"><a href="{% url 'supplier_portal:request_access' %}">Use a different CAGE code</a></p>
+{% endblock %}

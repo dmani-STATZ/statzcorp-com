@@ -1,0 +1,29 @@
+{% extends 'supplier_portal/_portal_page.html' %}
+
+{% block title %}Request Portal Access — STATZ Corporation{% endblock %}
+
+{% block meta_description %}Request access or reset your password for the STATZ Corporation Supplier Portal.{% endblock %}
+
+{% block header_tagline %}Request access or reset your password.{% endblock %}
+
+{% block card %}
+  <h3>Request Access / Reset Password</h3>
+  <p class="supplier-portal-lead">Enter your CAGE code. We'll show you a preview of the contact email we have on file, then send a secure link to that address so you can set your own password. STATZ staff never sees or handles your password.</p>
+
+  <form class="contact-form" method="post" action="{% url 'supplier_portal:request_access' %}" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="form-field-error">{{ form.non_field_errors|join:", " }}</div>
+    {% endif %}
+
+    <input type="text" id="id_cage_code" name="cage_code" placeholder="CAGE Code *" required autocomplete="username" value="{{ form.cage_code.value|default:'' }}">
+    {% if form.cage_code.errors %}
+      <div class="form-field-error">{{ form.cage_code.errors|join:", " }}</div>
+    {% endif %}
+
+    <button type="submit">Continue</button>
+  </form>
+
+  <p class="supplier-portal-links"><a href="{% url 'supplier_portal:login' %}">Back to login</a></p>
+{% endblock %}

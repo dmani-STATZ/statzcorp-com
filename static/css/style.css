@@ -1636,6 +1636,39 @@ body.login a:hover {
   line-height: 1.7;
 }
 
+.supplier-portal-links {
+  margin-top: 18px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.supplier-portal-masked-email {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  color: var(--navy);
+  text-align: center;
+  letter-spacing: 1px;
+  background: var(--gray-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin: 16px 0;
+}
+
+.supplier-portal-note {
+  background: var(--gray-light);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-top: 20px;
+}
+
+.supplier-portal-note p {
+  font-size: 13px;
+  color: var(--gray-mid);
+  line-height: 1.7;
+}
+
 /* ==================================================
    RESPONSIVE
 ================================================== */

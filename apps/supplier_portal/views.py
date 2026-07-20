@@ -1,11 +1,13 @@
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView, TemplateView
 
 from .auth import get_current_account, login_supplier, logout_supplier
-from .forms import SupplierLoginForm
+from .emails import mask_email, send_set_password_link
+from .forms import RequestAccessForm, SetPasswordForm, SupplierLoginForm
+from .tokens import read_set_password_token
 
 
 class SupplierLoginRequiredMixin:
@@ -49,3 +51,72 @@ class SupplierDashboardView(SupplierLoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['account'] = self.request.supplier_account
         return context
+
+
+class RequestAccessView(FormView):
+    """
+    Self-service access / forgot-password, step 1: enter a CAGE code.
+    On success, shows the masked on-file email for confirmation before
+    anything is sent — STATZ staff is never in the password chain.
+    """
+
+    template_name = 'supplier_portal/request_access.html'
+    form_class = RequestAccessForm
+
+    def form_valid(self, form):
+        return render(self.request, 'supplier_portal/request_access_confirm.html', {
+            'cage_code': form.account.cage_code,
+            'masked_email': mask_email(form.account.contact_email),
+        })
+
+
+class SendPasswordLinkView(View):
+    """Step 2: user confirmed the masked email — send the set-password link."""
+
+    def post(self, request, *args, **kwargs):
+        form = RequestAccessForm(request.POST)
+        if not form.is_valid():
+            return render(request, 'supplier_portal/request_access.html', {'form': form})
+
+        account = form.account
+        context = {'masked_email': mask_email(account.contact_email)}
+
+        if not account.can_request_reset():
+            context['recently_sent'] = True
+            return render(request, 'supplier_portal/request_access_sent.html', context)
+
+        if send_set_password_link(request, account):
+            account.register_reset_request()
+            return render(request, 'supplier_portal/request_access_sent.html', context)
+
+        messages.error(
+            request,
+            "We couldn't send the email just now. Please try again shortly, or "
+            "contact us at info@statzcorp.com or 608-798-4500.",
+        )
+        return redirect('supplier_portal:request_access')
+
+
+class SetPasswordView(FormView):
+    """Landing page for the emailed link: choose a password, then log in."""
+
+    template_name = 'supplier_portal/set_password.html'
+    form_class = SetPasswordForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.account = read_set_password_token(kwargs['token'])
+        if self.account is None:
+            return render(request, 'supplier_portal/set_password_invalid.html', status=410)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cage_code'] = self.account.cage_code
+        return context
+
+    def form_valid(self, form):
+        self.account.set_password(form.cleaned_data['password1'])
+        self.account.save(update_fields=['password', 'updated_at'])
+        self.account.reset_failed_attempts()
+        messages.success(self.request, "Your password has been set. You can now log in.")
+        return redirect('supplier_portal:login')

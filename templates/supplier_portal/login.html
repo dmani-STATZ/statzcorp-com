@@ -1,66 +1,32 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'supplier_portal/_portal_page.html' %}
 
 {% block title %}Supplier Portal Login — STATZ Corporation{% endblock %}
 
 {% block meta_description %}Log in to the STATZ Corporation Supplier Portal to view your supplier data.{% endblock %}
 
-{% block banner %}
-  <!-- ===== INNER HEADER ===== -->
-  <section id="inner-header">
-    <div class="container">
-      <h2>Supplier Portal</h2>
-      <p>Log in with your CAGE code to view your supplier data.</p>
-    </div>
-  </section>
-{% endblock %}
+{% block card %}
+  <h3>Supplier Login</h3>
+  <p class="supplier-portal-lead">Enter your CAGE code and password to view your supplier data.</p>
 
-{% block breadcrumb %}
-  <!-- ===== BREADCRUMB ===== -->
-  <section id="breadcrumb-sec">
-    <div class="container">
-      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-        <ul>
-          <li><a href="{% url 'public:index' %}">Home</a></li>
-          <li><a href="{% url 'public:resources' %}">Resources</a></li>
-          <li>Supplier Portal</li>
-        </ul>
-      </nav>
-    </div>
-    <div class="title-sec">
-      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
-    </div>
-  </section>
-{% endblock %}
+  <form class="contact-form" method="post" action="{% url 'supplier_portal:login' %}" novalidate>
+    {% csrf_token %}
 
-{% block content %}
-  <!-- ===== MAIN CONTENT ===== -->
-  <main class="page-content">
-    <div class="container">
-      <div class="supplier-portal-card animate-on-scroll">
-        <h3>Supplier Login</h3>
-        <p class="supplier-portal-lead">Enter your CAGE code and password to view your supplier data.</p>
+    {% if form.non_field_errors %}
+      <div class="form-field-error">{{ form.non_field_errors|join:", " }}</div>
+    {% endif %}
 
-        <form class="contact-form" method="post" action="{% url 'supplier_portal:login' %}" novalidate>
-          {% csrf_token %}
+    <input type="text" id="id_cage_code" name="cage_code" placeholder="CAGE Code *" required autocomplete="username" value="{{ form.cage_code.value|default:'' }}">
+    {% if form.cage_code.errors %}
+      <div class="form-field-error">{{ form.cage_code.errors|join:", " }}</div>
+    {% endif %}
 
-          {% if form.non_field_errors %}
-            <div class="form-field-error">{{ form.non_field_errors|join:", " }}</div>
-          {% endif %}
+    <input type="password" id="id_password" name="password" placeholder="Password *" required autocomplete="current-password">
+    {% if form.password.errors %}
+      <div class="form-field-error">{{ form.password.errors|join:", " }}</div>
+    {% endif %}
 
-          <input type="text" id="id_cage_code" name="cage_code" placeholder="CAGE Code *" required autocomplete="username" value="{{ form.cage_code.value|default:'' }}">
-          {% if form.cage_code.errors %}
-            <div class="form-field-error">{{ form.cage_code.errors|join:", " }}</div>
-          {% endif %}
+    <button type="submit">Log In</button>
+  </form>
 
-          <input type="password" id="id_password" name="password" placeholder="Password *" required autocomplete="current-password">
-          {% if form.password.errors %}
-            <div class="form-field-error">{{ form.password.errors|join:", " }}</div>
-          {% endif %}
-
-          <button type="submit">Log In</button>
-        </form>
-      </div>
-    </div>
-  </main>
+  <p class="supplier-portal-links"><a href="{% url 'supplier_portal:request_access' %}">Need access or forgot your password?</a></p>
 {% endblock %}

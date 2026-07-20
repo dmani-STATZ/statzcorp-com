@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block banner %}
+  <!-- ===== INNER HEADER ===== -->
+  <section id="inner-header">
+    <div class="container">
+      <h2>Supplier Portal</h2>
+      <p>{% block header_tagline %}Log in with your CAGE code to view your supplier data.{% endblock %}</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <!-- ===== BREADCRUMB ===== -->
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li><a href="{% url 'public:resources' %}">Resources</a></li>
+          <li>Supplier Portal</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="page-content">
+    <div class="container">
+      <div class="supplier-portal-card animate-on-scroll">
+        {% block card %}{% endblock %}
+      </div>
+    </div>
+  </main>
+{% endblock %}

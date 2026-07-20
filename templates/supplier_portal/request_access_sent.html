@@ -1,0 +1,18 @@
+{% extends 'supplier_portal/_portal_page.html' %}
+
+{% block title %}Check Your Email — STATZ Corporation{% endblock %}
+
+{% block header_tagline %}Request access or reset your password.{% endblock %}
+
+{% block card %}
+  <h3>Check Your Email</h3>
+
+  {% if recently_sent %}
+    <p class="supplier-portal-lead">A set-password link was already sent to <strong>{{ masked_email }}</strong> recently. Please check your inbox (and spam folder). To protect your account, we only send one link every 15 minutes — try again shortly if it hasn't arrived.</p>
+  {% else %}
+    <p class="supplier-portal-lead">We've sent a set-password link to <strong>{{ masked_email }}</strong>. The link expires in 1 hour and can only be used once.</p>
+    <p class="supplier-portal-lead">Don't see it? Check your spam folder. If it still hasn't arrived, contact us at <a href="mailto:info@statzcorp.com">info@statzcorp.com</a> or 608-798-4500.</p>
+  {% endif %}
+
+  <p class="supplier-portal-links"><a href="{% url 'supplier_portal:login' %}">Back to login</a></p>
+{% endblock %}
