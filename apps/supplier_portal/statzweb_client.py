@@ -104,3 +104,24 @@ def verify_supplier(cage_code):
     if status == 404:
         return None
     return data
+
+
+def send_email(to, subject, body_html):
+    """
+    POST /send-email/
+
+    STATZWeb sends this via Microsoft Graph (always From
+    GRAPH_MAIL_SENDER_CONTRACT) — direct SMTP to external supplier addresses
+    isn't reliable from GCCH direct-send, so all supplier-facing portal email
+    (set-password links, etc.) routes through here instead of Django's
+    send_mail. Body must be exactly {to, subject, body} — STATZWeb rejects
+    (403) any extra key, so don't add fields here without updating that view.
+
+    Raises StatzWebAPIError on failure (bad payload, Graph failure, network
+    issue) — callers decide how to surface that to the user.
+    """
+    payload = json.dumps({'to': to, 'subject': subject, 'body': body_html}).encode('utf-8')
+    status, data = _request('POST', '/send-email/', body_bytes=payload)
+    if status != 200 or not data.get('ok'):
+        raise StatzWebUnavailable(f"send-email did not confirm success: {data}")
+    return True
