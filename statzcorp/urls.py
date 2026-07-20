@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('apps.contact.urls')),
     path('surveys/', include('apps.surveys.urls')),
     path('videos/', include('apps.videos.urls')),
+    path('supplier-portal/', include('apps.supplier_portal.urls')),
 ]
 
 if settings.DEBUG:

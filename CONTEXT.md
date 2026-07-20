@@ -41,6 +41,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 | Redesign / feature roadmap | Written, not implemented as code | `rebuild_migration_plan.md` |
 | Resources guides (CAGE / JCP / shipping / supplier success) | Done | `public:resources`, `templates/public/resources.html` (`#cage-code`, `#jcp`, `#shipping`, `#supplier-success`), nav/footer in `templates/base.html` |
 | Brand palette navy + gold | Done | `static/css/style.css` `:root` (`--primary`, `--accent`, …) |
+| Supplier Portal — Phase 1a shell (login/session only, no supplier data yet) | Done | `apps/supplier_portal/` — `SupplierPortalAccount` model (hashed password, lockout, session key `supplier_portal_account_id`, intentionally separate from `django.contrib.auth`); `supplier_portal:login`/`logout`/`dashboard` views; admin-managed account creation/password reset (`SupplierPortalAccountAdmin`); "Supplier Portal" tab added to `public:resources` jump-nav. Dashboard is an empty shell — see Phase 1b below. |
 
 **Frontend styling decision (owner-stated):** Stick with project CSS in `static/css/style.css`. No Tailwind. No Bootstrap. No django-crispy-forms. Keep CSS in templates minimal; prefer classes defined in the shared stylesheet. Crispy/Bootstrap packages were removed from `requirements.txt` and `statzcorp/settings/base.py` with owner approval. Main nav (`.nav-inner`) is centered (`justify-content: center`) — was `flex-end` from the legacy static design.
 
@@ -55,7 +56,8 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 - Content rewrites (NSN/FSC emphasis, condensed history, team group-photo approach, cert PDF downloads)
 - LinkedIn / video production program (mostly off-site)
 - Migrate database from SQLite to Microsoft SQL Server (MSSQL) — attempted 2026-07-14 and reverted; blocked on ODBC Driver 18 persistence on App Service Linux and VNet Integration to the private DB host (not just Django config). Packages/settings remain stubbed in comments for resume.
-- Supplier Portal — supplier-facing login (single shared credential per supplier, cage code as username, separate from `django.contrib.auth`) backed entirely by a server-to-server API into the STATZWeb/STATZCorp project (owner of `Supplier`/`Contact`/certifications/documents), so this project never holds supplier business data itself. Phase 1 read-only, Phase 2 adds direct write-back (no approval queue; STATZWeb enforces the editable-field allowlist and audits/notifies staff per write). API contract spec (auth scheme, endpoints, field allowlist, open questions for the STATZWeb implementer) → [`docs/supplier-portal-api-contract.md`](docs/supplier-portal-api-contract.md). Not started on either side.
+- Supplier Portal Phase 1b — the dashboard shell (`apps/supplier_portal`, Phase 1a — done, see Built table above) needs to render real supplier data by calling the STATZWeb API. Blocked on the STATZWeb side building that API per [`docs/supplier-portal-api-contract.md`](docs/supplier-portal-api-contract.md) (auth scheme, endpoints, field allowlist, open questions for the STATZWeb implementer) — spec handed off, not yet implemented there.
+- Supplier Portal Phase 2 — write-back from the dashboard into STATZWeb (direct write, no approval queue; STATZWeb enforces the editable-field allowlist and audits/notifies staff per write). Depends on Phase 1b landing first.
 
 **Legacy / non-Django leftovers:**
 
@@ -73,6 +75,7 @@ Browser
        → apps.contact    FormView → ContactMessage DB + email to ContactRecipient (fallback: CONTACT_EMAIL_TO)
        → apps.surveys    List/detail → Survey/Question/Submission/Answer
        → apps.videos     DetailView → VideoAsset (Blob Storage or local media)
+       → apps.supplier_portal  Session-based login (own SupplierPortalAccount, not django.contrib.auth) → dashboard shell (Phase 1b will call the STATZWeb API for real data)
        → /admin/         Django admin
   ← templates/base.html + static/ (WhiteNoise in middleware for static files)
 ```
@@ -90,7 +93,7 @@ Browser
 
 **Email:** Console backend forced in `statzcorp/settings/local.py`. Production uses SMTP settings from env (Office 365 host defaults in `base.py` / `.env.example`).
 
-**Auth for public site:** Anonymous public pages. Optional `Submission.user` FK if authenticated. Entra ID / MSAL packages are commented out in `requirements.txt` (“add when ready for internal views”) — not active.
+**Auth for public site:** Anonymous public pages. Optional `Submission.user` FK if authenticated. Entra ID / MSAL packages are commented out in `requirements.txt` (“add when ready for internal views”) — not active. Supplier Portal (`apps/supplier_portal`) is a third, separate identity system: session key `supplier_portal_account_id` against `SupplierPortalAccount`, deliberately not `django.contrib.auth` — a supplier login is a company (CAGE code), not a staff/admin identity.
 
 **Documentation:** Staff guide for uploading, sharing, and embedding videos → [`docs/how-to-add-videos.md`](docs/how-to-add-videos.md) (canonical). Supplier Portal API contract (spec for the STATZWeb-side API, not yet built) → [`docs/supplier-portal-api-contract.md`](docs/supplier-portal-api-contract.md). Product/design roadmap → `rebuild_migration_plan.md`. Agent operating rules → `AGENTS.md`.
 
