@@ -1636,6 +1636,36 @@ body.login a:hover {
   line-height: 1.7;
 }
 
+.supplier-portal-internal-tool {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.supplier-portal-internal-tool a {
+  color: var(--gray-mid);
+}
+
+.supplier-portal-test-result {
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.supplier-portal-test-result--ok {
+  background: #eaf7ec;
+  border: 1px solid #b7e3bd;
+  color: #1e5c28;
+}
+
+.supplier-portal-test-result--fail {
+  background: #fdecec;
+  border: 1px solid #f3b8b8;
+  color: #7a1f1f;
+}
+
 .supplier-portal-links {
   margin-top: 18px;
   font-size: 14px;

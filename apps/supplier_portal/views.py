@@ -7,6 +7,7 @@ from django.views.generic import FormView, TemplateView
 from .auth import get_current_account, login_supplier, logout_supplier
 from .emails import mask_email, send_set_password_link
 from .forms import RequestAccessForm, SetPasswordForm, SupplierLoginForm
+from .statzweb_client import StatzWebAPIError, StatzWebNotConfigured, verify_supplier
 from .tokens import read_set_password_token
 
 
@@ -120,3 +121,35 @@ class SetPasswordView(FormView):
         self.account.reset_failed_attempts()
         messages.success(self.request, "Your password has been set. You can now log in.")
         return redirect('supplier_portal:login')
+
+
+class ApiConnectionTestView(TemplateView):
+    """
+    TEMPORARY diagnostic page — verifies statzcorp-com can reach STATZWeb's
+    Supplier Portal API (network path + signed auth), independent of any
+    real supplier data. Uses a placeholder CAGE code that's expected NOT to
+    exist — a clean "not found" response is just as much proof of success
+    as a "found" one, since either means the request reached STATZWeb and
+    was authenticated correctly. Only a StatzWebAPIError means the pipe
+    itself is broken.
+
+    Remove this view, its URL, its template, and the login-page link once
+    the production VNet integration is confirmed working end to end.
+    """
+
+    template_name = 'supplier_portal/api_test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            data = verify_supplier('CONNECTION-TEST-PLACEHOLDER')
+            context['success'] = True
+            context['found'] = data is not None
+            context['data'] = data
+        except StatzWebNotConfigured as exc:
+            context['success'] = False
+            context['error'] = str(exc)
+        except StatzWebAPIError as exc:
+            context['success'] = False
+            context['error'] = str(exc)
+        return context

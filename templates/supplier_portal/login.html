@@ -29,4 +29,7 @@
   </form>
 
   <p class="supplier-portal-links"><a href="{% url 'supplier_portal:request_access' %}">Need access or forgot your password?</a></p>
+
+  {# TEMPORARY — remove this link + supplier_portal:api_test once production VNet integration is confirmed. #}
+  <p class="supplier-portal-internal-tool"><a href="{% url 'supplier_portal:api_test' %}">Internal: test STATZWeb API connection</a></p>
 {% endblock %}

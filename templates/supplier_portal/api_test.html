@@ -1,0 +1,29 @@
+{% extends 'supplier_portal/_portal_page.html' %}
+
+{% block title %}STATZWeb API Connection Test — STATZ Corporation{% endblock %}
+
+{% block header_tagline %}Internal diagnostic — temporary{% endblock %}
+
+{% block card %}
+  <h3>STATZWeb API Connection Test</h3>
+  <p class="supplier-portal-lead">
+    Temporary internal diagnostic. Checks whether statzcorp-com can reach STATZWeb's
+    Supplier Portal API and authenticate — not whether any particular supplier's
+    data exists.
+  </p>
+
+  {% if success %}
+    <div class="supplier-portal-test-result supplier-portal-test-result--ok">
+      <strong>&#x2705; Connection successful.</strong>
+      <p>Reached STATZWeb and the signed request was accepted.</p>
+      <p>Test CAGE code {% if found %}was found{% else %}was not found (expected — it's a placeholder, not a real supplier){% endif %}.</p>
+    </div>
+  {% else %}
+    <div class="supplier-portal-test-result supplier-portal-test-result--fail">
+      <strong>&#x274C; Connection failed.</strong>
+      <p>{{ error }}</p>
+    </div>
+  {% endif %}
+
+  <p class="supplier-portal-links"><a href="{% url 'supplier_portal:api_test' %}">Run again</a> &nbsp;|&nbsp; <a href="{% url 'supplier_portal:login' %}">Back to login</a></p>
+{% endblock %}

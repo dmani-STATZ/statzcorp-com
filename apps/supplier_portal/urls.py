@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    ApiConnectionTestView,
     RequestAccessView,
     SendPasswordLinkView,
     SetPasswordView,
@@ -18,4 +19,6 @@ urlpatterns = [
     path('request-access/', RequestAccessView.as_view(), name='request_access'),
     path('request-access/send/', SendPasswordLinkView.as_view(), name='send_password_link'),
     path('set-password/<str:token>/', SetPasswordView.as_view(), name='set_password'),
+    # TEMPORARY — remove once production VNet integration to STATZWeb is confirmed.
+    path('api-test/', ApiConnectionTestView.as_view(), name='api_test'),
 ]
