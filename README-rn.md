@@ -1,5 +1,14 @@
 # STATZ Corporation Website — Release Notes
 
+## 2026-08-21
+### Added
+- Supplier Portal login page now explains how first-time access works: CAGE code only (no separate signup), confirm the email STATZ has on file, then set your own password.
+- Supplier Portal dashboard now displays live company information, addresses, contacts, certifications with expiration status, classifications, and downloadable documents sourced directly from STATZ's supplier system.
+
+## 2026-07-22
+### Changed
+- The temporary "Internal: test STATZWeb API connection" link on the Supplier Portal login page is now shown only to staff users (anonymous visitors no longer see it).
+
 ## 2026-07-20
 ### Added
 - New "Be A Successful Supplier" guide on the Resources page (`/resources/#supplier-success`) — Do's and Don'ts for suppliers working with STATZ, covering SAM/CAGE registration, JCP/export-control compliance, and MIL-STD shipping discipline.

@@ -16,6 +16,8 @@ import urllib.request
 from django.conf import settings
 
 DEFAULT_TIMEOUT = 8
+_MAX_ERROR_BODY_BYTES = 8192
+_MAX_ERROR_BODY_CHARS = 600
 
 
 class StatzWebAPIError(Exception):
@@ -28,6 +30,45 @@ class StatzWebNotConfigured(StatzWebAPIError):
 
 class StatzWebUnavailable(StatzWebAPIError):
     """Network failure, timeout, or an unexpected non-2xx/404 response."""
+
+
+class StatzWebHTTPError(StatzWebUnavailable):
+    """
+    Non-404 HTTP response from STATZWeb (or an intervening proxy/WAF).
+
+    Carries structured diagnostic fields so callers can distinguish application
+    contract errors from non-JSON infrastructure responses. Safe to render:
+    never includes API key or HMAC secret material.
+    """
+
+    def __init__(
+        self,
+        *,
+        status,
+        request_url,
+        content_type='',
+        body_snippet='',
+        error_code=None,
+        error_message=None,
+        method='GET',
+        path='',
+    ):
+        self.status = status
+        self.request_url = request_url
+        self.content_type = content_type or ''
+        self.body_snippet = body_snippet or ''
+        self.error_code = error_code
+        self.error_message = error_message
+        self.method = method
+        self.path = path or urllib.parse.urlparse(request_url).path
+        super().__init__(str(self))
+
+    def __str__(self):
+        ct = self.content_type or '(none)'
+        return (
+            f"STATZWeb API returned HTTP {self.status} for "
+            f"{self.method} {self.path} (content-type: {ct})"
+        )
 
 
 def _canonical_string(method, path, timestamp, body_bytes):
@@ -68,6 +109,8 @@ def _request(method, path, body_bytes=b'', timeout=DEFAULT_TIMEOUT):
     req.add_header('X-API-Key', api_key)
     req.add_header('X-Timestamp', timestamp)
     req.add_header('X-Signature', signature)
+    req.add_header('Accept', 'application/json')
+    req.add_header('User-Agent', 'statzcorp-com/1.0 (+supplier-portal-client)')
     if body_bytes:
         req.add_header('Content-Type', 'application/json')
 
@@ -76,15 +119,33 @@ def _request(method, path, body_bytes=b'', timeout=DEFAULT_TIMEOUT):
             raw = resp.read()
             return resp.status, (json.loads(raw) if raw else {})
     except urllib.error.HTTPError as exc:
+        raw = exc.read(_MAX_ERROR_BODY_BYTES)
+        content_type = ''
+        if exc.headers is not None:
+            content_type = exc.headers.get('Content-Type', '') or ''
+        body_snippet = raw.decode('utf-8', errors='replace')[:_MAX_ERROR_BODY_CHARS]
+        payload = {}
+        error_code = None
+        error_message = None
         try:
-            payload = json.loads(exc.read())
-        except Exception:
+            payload = json.loads(raw) if raw else {}
+            err = payload.get('error') if isinstance(payload, dict) else None
+            if isinstance(err, dict):
+                error_code = err.get('code')
+                error_message = err.get('message')
+        except (json.JSONDecodeError, TypeError, ValueError):
             payload = {}
         if exc.code == 404:
             return 404, payload
-        raise StatzWebUnavailable(
-            f"STATZWeb API returned HTTP {exc.code} for {method} {path}: "
-            f"{payload.get('error', {}).get('message', '(no message)')}"
+        raise StatzWebHTTPError(
+            status=exc.code,
+            request_url=full_url,
+            content_type=content_type,
+            body_snippet=body_snippet,
+            error_code=error_code,
+            error_message=error_message,
+            method=method.upper(),
+            path=path,
         ) from exc
     except urllib.error.URLError as exc:
         raise StatzWebUnavailable(f"Could not reach STATZWeb API: {exc.reason}") from exc
@@ -104,6 +165,46 @@ def verify_supplier(cage_code):
     if status == 404:
         return None
     return data
+
+
+def get_supplier(cage_code):
+    """
+    GET /suppliers/{cage_code}/
+
+    Returns the supplier profile on success, or None if STATZWeb has no active
+    supplier for that CAGE code.
+    """
+    path = f"/suppliers/{urllib.parse.quote(cage_code, safe='')}/"
+    status, data = _request('GET', path)
+    if status == 404:
+        return None
+    return data
+
+
+def get_document_download_url(cage_code, document_id):
+    """
+    GET /suppliers/{cage_code}/documents/{document_id}/download/
+
+    Returns the short-lived document URL on success, or None if the document
+    does not exist for this supplier.
+    """
+    try:
+        document_id = int(document_id)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("document_id must be an integer") from exc
+    path = (
+        f"/suppliers/{urllib.parse.quote(cage_code, safe='')}/"
+        f"documents/{document_id}/download/"
+    )
+    status, data = _request('GET', path)
+    if status == 404:
+        return None
+    url = data.get('url') if isinstance(data, dict) else None
+    if not isinstance(url, str) or not url.strip():
+        raise StatzWebUnavailable(
+            "STATZWeb document download response did not contain a URL."
+        )
+    return url
 
 
 def send_email(to, subject, body_html):

@@ -6,14 +6,254 @@
 
 {% block header_tagline %}CAGE Code {{ account.cage_code }}{% endblock %}
 
+{% block card_class %} supplier-portal-card--wide{% endblock %}
+
 {% block card %}
   <div class="supplier-portal-dashboard-header">
-    <h3>Welcome, CAGE {{ account.cage_code }}</h3>
+    <h3>
+      {% if state == 'ok' and supplier.name %}
+        {{ supplier.name }}
+        <small>CAGE {{ supplier.cage_code|default:account.cage_code }}</small>
+      {% else %}
+        CAGE {{ account.cage_code }}
+      {% endif %}
+    </h3>
     <form class="contact-form" method="post" action="{% url 'supplier_portal:logout' %}">
       {% csrf_token %}
       <button type="submit">Log Out</button>
     </form>
   </div>
 
-  <p class="supplier-portal-placeholder">Your supplier data will appear here soon — this dashboard is being built out. Check back shortly.</p>
+  {% if state != 'ok' %}
+    <div class="supplier-portal-test-result supplier-portal-test-result--fail">
+      <p>{{ notice }}</p>
+    </div>
+  {% else %}
+    <section class="supplier-portal-section">
+      <h4>Company Information</h4>
+      <dl class="supplier-portal-deflist">
+        {% for field in supplier.profile_fields %}
+          {% if field.key == 'website_url' %}
+            {% if field.value.text %}
+              <dt>{{ field.label }}</dt>
+              <dd>
+                {% if field.value.href %}
+                  <a href="{{ field.value.href }}" rel="noopener" target="_blank">{{ field.value.text }}</a>
+                {% else %}
+                  {{ field.value.text }}
+                {% endif %}
+              </dd>
+            {% endif %}
+          {% elif field.value %}
+            <dt>{{ field.label }}</dt>
+            <dd>
+              {% if field.key == 'business_email' or field.key == 'primary_email' %}
+                <a href="mailto:{{ field.value }}">{{ field.value }}</a>
+              {% elif field.key == 'business_phone' or field.key == 'business_fax' or field.key == 'primary_phone' %}
+                <a href="tel:{{ field.value }}">{{ field.value }}</a>
+              {% else %}
+                {{ field.value }}
+              {% endif %}
+            </dd>
+          {% endif %}
+        {% endfor %}
+      </dl>
+    </section>
+
+    <section class="supplier-portal-section">
+      <h4>Addresses</h4>
+      {% if supplier.addresses %}
+        <div class="supplier-portal-addresses">
+          {% for address in supplier.addresses %}
+            <div>
+              <h5>{{ address.label }}</h5>
+              <address>
+                {% for line in address.lines %}
+                  {{ line }}{% if not forloop.last %}<br>{% endif %}
+                {% endfor %}
+              </address>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="supplier-portal-empty">No addresses on file.</p>
+      {% endif %}
+    </section>
+
+    <section class="supplier-portal-section">
+      <h4>Contacts</h4>
+      {% if supplier.contacts %}
+        <div class="supplier-portal-table-wrap">
+          <table class="supplier-portal-table">
+            <caption class="visually-hidden">Supplier contacts</caption>
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Title</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Categories</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for contact in supplier.contacts %}
+                <tr>
+                  <td>{% if contact.salutation %}{{ contact.salutation }} {% endif %}{{ contact.name|default:"—" }}</td>
+                  <td>{{ contact.title|default:"—" }}</td>
+                  <td>{% if contact.phone %}<a href="tel:{{ contact.phone }}">{{ contact.phone }}</a>{% else %}—{% endif %}</td>
+                  <td>{% if contact.email %}<a href="mailto:{{ contact.email }}">{{ contact.email }}</a>{% else %}—{% endif %}</td>
+                  <td>{{ contact.categories|join:", "|default:"—" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="supplier-portal-empty">No contacts on file.</p>
+      {% endif %}
+    </section>
+
+    <section class="supplier-portal-section">
+      <h4>Certifications</h4>
+      {% if supplier.certifications %}
+        <div class="supplier-portal-table-wrap">
+          <table class="supplier-portal-table">
+            <caption class="visually-hidden">Supplier certifications</caption>
+            <thead>
+              <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Certified</th>
+                <th scope="col">Expires</th>
+                <th scope="col">Status</th>
+                <th scope="col">Compliance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for certification in supplier.certifications %}
+                <tr>
+                  <td>{{ certification.type|default:"—" }}</td>
+                  <td>
+                    {% if certification.certification_date_is_date %}
+                      {{ certification.certification_date|date:"M j, Y" }}
+                    {% else %}
+                      {{ certification.certification_date|default:"—" }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if certification.certification_expiration_is_date %}
+                      {{ certification.certification_expiration|date:"M j, Y" }}
+                    {% else %}
+                      {{ certification.certification_expiration|default:"—" }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if certification.status_label %}
+                      <span class="supplier-portal-badge supplier-portal-badge--{{ certification.status_code }}">{{ certification.status_label }}</span>
+                    {% else %}
+                      —
+                    {% endif %}
+                  </td>
+                  <td>{{ certification.compliance_status|default:"—" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="supplier-portal-empty">No certifications on file.</p>
+      {% endif %}
+    </section>
+
+    <section class="supplier-portal-section">
+      <h4>Classifications</h4>
+      {% if supplier.classifications %}
+        <div class="supplier-portal-table-wrap">
+          <table class="supplier-portal-table">
+            <caption class="visually-hidden">Supplier classifications</caption>
+            <thead>
+              <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Effective</th>
+                <th scope="col">Expires</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for classification in supplier.classifications %}
+                <tr>
+                  <td>{{ classification.type|default:"—" }}</td>
+                  <td>
+                    {% if classification.classification_date_is_date %}
+                      {{ classification.classification_date|date:"M j, Y" }}
+                    {% else %}
+                      {{ classification.classification_date|default:"—" }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if classification.classification_expiration_is_date %}
+                      {{ classification.classification_expiration|date:"M j, Y" }}
+                    {% else %}
+                      {{ classification.classification_expiration|default:"—" }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if classification.status_label %}
+                      <span class="supplier-portal-badge supplier-portal-badge--{{ classification.status_code }}">{{ classification.status_label }}</span>
+                    {% else %}
+                      —
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="supplier-portal-empty">No classifications on file.</p>
+      {% endif %}
+    </section>
+
+    <section class="supplier-portal-section">
+      <h4>Documents</h4>
+      {% if supplier.documents %}
+        <div class="supplier-portal-table-wrap">
+          <table class="supplier-portal-table">
+            <caption class="visually-hidden">Supplier documents</caption>
+            <thead>
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Type</th>
+                <th scope="col">Linked To</th>
+                <th scope="col">Uploaded</th>
+                <th scope="col">Download</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for document in supplier.documents %}
+                <tr>
+                  <td>{{ document.description|default:"—" }}</td>
+                  <td>{{ document.doc_type_label|default:"—" }}</td>
+                  <td>{{ document.linked_to|default:"—" }}</td>
+                  <td>
+                    {% if document.uploaded_on_is_datetime %}
+                      {{ document.uploaded_on|date:"M j, Y" }}
+                    {% else %}
+                      {{ document.uploaded_on|default:"—" }}
+                    {% endif %}
+                  </td>
+                  <td><a href="{% url 'supplier_portal:document_download' document.id %}">Download</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="supplier-portal-empty">No documents on file.</p>
+      {% endif %}
+    </section>
+
+    <div class="supplier-portal-note">
+      <p>This information is read live from STATZ's supplier system. To request a correction, contact <a href="mailto:info@statzcorp.com">info@statzcorp.com</a> or 608-798-4500.</p>
+    </div>
+  {% endif %}
 {% endblock %}

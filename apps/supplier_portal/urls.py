@@ -6,6 +6,7 @@ from .views import (
     SendPasswordLinkView,
     SetPasswordView,
     SupplierDashboardView,
+    SupplierDocumentDownloadView,
     SupplierLoginView,
     SupplierLogoutView,
 )
@@ -16,6 +17,11 @@ urlpatterns = [
     path('', SupplierLoginView.as_view(), name='login'),
     path('logout/', SupplierLogoutView.as_view(), name='logout'),
     path('dashboard/', SupplierDashboardView.as_view(), name='dashboard'),
+    path(
+        'documents/<int:document_id>/download/',
+        SupplierDocumentDownloadView.as_view(),
+        name='document_download',
+    ),
     path('request-access/', RequestAccessView.as_view(), name='request_access'),
     path('request-access/send/', SendPasswordLinkView.as_view(), name='send_password_link'),
     path('set-password/<str:token>/', SetPasswordView.as_view(), name='set_password'),

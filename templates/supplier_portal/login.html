@@ -30,6 +30,7 @@
 
   <p class="supplier-portal-links"><a href="{% url 'supplier_portal:request_access' %}">Need access or forgot your password?</a></p>
 
-  {# TEMPORARY — remove this link + supplier_portal:api_test once production VNet integration is confirmed. #}
-  <p class="supplier-portal-internal-tool"><a href="{% url 'supplier_portal:api_test' %}">Internal: test STATZWeb API connection</a></p>
+  <div class="supplier-portal-note">
+    <p><strong>How this works.</strong> This portal is for suppliers who already work with STATZ Corporation. Access is by CAGE code — there is no separate account signup. First time here, or forgot your password? Use the "Need access or forgot your password?" link above — you'll confirm the email STATZ has on file, then get a secure link to set your own password. STATZ staff never sees or sets it. Trouble? Contact us at <a href="mailto:info@statzcorp.com">info@statzcorp.com</a> or 608-798-4500.</p>
+  </div>
 {% endblock %}

@@ -82,6 +82,13 @@ Observed in the current codebase — match these when editing:
 - Do not implement the MSSQL migration (or add `mssql-django` / `pyodbc` as required deps) unless the user asks.
 - Do not implement roadmap items from `rebuild_migration_plan.md` unless the user asks for that work.
 - Do not commit unless the user explicitly asks.
+- Diagnostic and internal-tool views in `apps/supplier_portal` must be staff-gated (`UserPassesTestMixin` + `is_staff`) and must never render secret values; booleans and lengths only.
+- Do not modify `apps/supplier_portal/statzweb_client.py` signing logic (`_canonical_string`, `_sign`, `X-API-Key` / `X-Timestamp` / `X-Signature` header names, or the GET-signs-empty-body rule) without an explicit paired change on the STATZWeb side — that implementation was audited byte-for-byte against STATZWeb's `suppliers/portal/auth.py` and is correct.
+- Supplier business data is never persisted locally: no models, database caching, or fixtures. STATZWeb is the system of record. If a task appears to require a local Supplier table, stop and ask because the scope is wrong.
+- All STATZWeb reads and writes go through `apps/supplier_portal/statzweb_client.py`; never construct a signed request inline.
+- Any value rendered from the STATZWeb API must first pass through the allowlist construction in `apps/supplier_portal/presenters.py`; never pass a raw API dict into template context.
+- The authenticated supplier's CAGE code comes from `request.supplier_account`, never from a URL parameter, query string, form field, or other user input.
+- Log exception detail from STATZWeb for staff diagnosis; never render it to a supplier.
 
 ## Commit / PR Conventions
 

@@ -12,18 +12,61 @@
     data exists.
   </p>
 
+  <div class="supplier-portal-test-result supplier-portal-test-result--fail">
+    <strong>Staff-only temporary diagnostic.</strong>
+    <p>Do not share this page or its output outside STATZ operations. Remove once production connectivity is confirmed.</p>
+  </div>
+
+  {% if interpretation %}
+    <div class="supplier-portal-test-result {% if success %}supplier-portal-test-result--ok{% else %}supplier-portal-test-result--fail{% endif %}">
+      <strong>{{ interpretation }}</strong>
+    </div>
+  {% endif %}
+
   {% if success %}
     <div class="supplier-portal-test-result supplier-portal-test-result--ok">
-      <strong>&#x2705; Connection successful.</strong>
+      <strong>Connection successful.</strong>
       <p>Reached STATZWeb and the signed request was accepted.</p>
       <p>Test CAGE code {% if found %}was found{% else %}was not found (expected — it's a placeholder, not a real supplier){% endif %}.</p>
     </div>
   {% else %}
     <div class="supplier-portal-test-result supplier-portal-test-result--fail">
-      <strong>&#x274C; Connection failed.</strong>
-      <p>{{ error }}</p>
+      <strong>Connection failed.</strong>
+      {% if error %}<p>{{ error }}</p>{% endif %}
     </div>
   {% endif %}
+
+  <div class="supplier-portal-diagnostics">
+    <dl>
+      <dt>Base URL configured</dt>
+      <dd>{{ diagnostics.base_url_configured }}</dd>
+      <dt>Base URL scheme/host</dt>
+      <dd>{{ diagnostics.base_url_scheme_host|default:"(empty)" }}</dd>
+      <dt>Base URL path</dt>
+      <dd>{{ diagnostics.base_url_path|default:"(empty)" }}</dd>
+      <dt>Has /api/supplier-portal/ prefix</dt>
+      <dd>{{ diagnostics.base_url_has_expected_prefix }}</dd>
+      <dt>Request URL</dt>
+      <dd>{{ diagnostics.request_url|default:"(empty)" }}</dd>
+      <dt>API key present</dt>
+      <dd>{{ diagnostics.api_key_present }} (length {{ diagnostics.api_key_length }})</dd>
+      <dt>HMAC secret present</dt>
+      <dd>{{ diagnostics.hmac_secret_present }} (length {{ diagnostics.hmac_secret_length }})</dd>
+      <dt>HTTP status</dt>
+      <dd>{{ http_status|default:"(none)" }}</dd>
+      <dt>Content-Type</dt>
+      <dd>{{ content_type|default:"(none)" }}</dd>
+      <dt>Error code</dt>
+      <dd>{{ error_code|default:"(none)" }}</dd>
+      <dt>Error message</dt>
+      <dd>{{ error_message|default:"(none)" }}</dd>
+    </dl>
+
+    {% if body_snippet %}
+      <p class="supplier-portal-lead">Response body snippet</p>
+      <pre>{{ body_snippet|truncatechars:600 }}</pre>
+    {% endif %}
+  </div>
 
   <p class="supplier-portal-links"><a href="{% url 'supplier_portal:api_test' %}">Run again</a> &nbsp;|&nbsp; <a href="{% url 'supplier_portal:login' %}">Back to login</a></p>
 {% endblock %}
