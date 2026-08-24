@@ -302,3 +302,71 @@ def present_supplier(raw):
         'classifications': classifications,
         'documents': documents,
     }
+
+
+def _plain_text(value):
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, str):
+        stripped = value.strip()
+        return stripped or None
+    return None
+
+
+def _present_clin(item):
+    if not isinstance(item, dict):
+        return None
+    clin_number = _plain_text(item.get('clin_number'))
+    if clin_number is None:
+        return None
+    return {
+        'clin_number': clin_number,
+        'nsn': _plain_text(item.get('nsn')),
+        'due_date': _plain_text(item.get('due_date')),
+    }
+
+
+def _present_contract(item):
+    if not isinstance(item, dict):
+        return None
+    contract_number = _plain_text(item.get('contract_number'))
+    if contract_number is None:
+        return None
+    raw_clins = item.get('clins')
+    clins = []
+    for clin in raw_clins if isinstance(raw_clins, list) else []:
+        presented = _present_clin(clin)
+        if presented is not None:
+            clins.append(presented)
+    return {
+        'contract_number': contract_number,
+        'award_date': _plain_text(item.get('award_date')),
+        'status': _plain_text(item.get('status')),
+        'clins': clins,
+    }
+
+
+def present_supplier_contracts(raw_data):
+    """
+    Allowlist STATZWeb contract payloads for template context.
+
+    Reads only contract_number, award_date, status, and per-CLIN clin_number,
+    nsn, and due_date. Skips malformed contract/CLIN entries rather than
+    raising. Dollar/price/funding keys are never copied even if STATZWeb
+    sends them.
+    """
+    if not isinstance(raw_data, dict):
+        return []
+    raw_contracts = raw_data.get('contracts')
+    if not isinstance(raw_contracts, list):
+        return []
+    contracts = []
+    for item in raw_contracts:
+        presented = _present_contract(item)
+        if presented is not None:
+            contracts.append(presented)
+    return contracts

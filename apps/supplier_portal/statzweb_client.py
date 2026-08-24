@@ -167,6 +167,26 @@ def verify_supplier(cage_code):
     return data
 
 
+def get_supplier_contracts(cage_code):
+    """
+    GET /suppliers/{cage_code}/contracts/
+
+    Returns {"contracts": [...]} on success, or None if STATZWeb has no supplier
+    for that CAGE code (unknown or archived — a real "doesn't exist", matching
+    verify_supplier; distinct from StatzWebUnavailable/StatzWebNotConfigured,
+    which mean the lookup itself couldn't be performed).
+
+    Returns the raw parsed JSON. Presentation/allowlisting belongs in
+    presenters.present_supplier_contracts. See
+    docs/supplier-portal-api-contract.md §4.4.
+    """
+    path = f"/suppliers/{urllib.parse.quote(cage_code, safe='')}/contracts/"
+    status, data = _request('GET', path)
+    if status == 404:
+        return None
+    return data
+
+
 def get_supplier(cage_code):
     """
     GET /suppliers/{cage_code}/

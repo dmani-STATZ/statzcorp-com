@@ -251,7 +251,66 @@
         <p class="supplier-portal-empty">No documents on file.</p>
       {% endif %}
     </section>
+  {% endif %}
 
+  <section class="supplier-portal-section">
+    <h4>Supplier Contracts</h4>
+    {% if contracts_error %}
+      <div class="supplier-portal-note">
+        <p>We couldn't load your contract data just now — please check back shortly, or contact us at <a href="mailto:info@statzcorp.com">info@statzcorp.com</a> or 608-798-4500.</p>
+      </div>
+    {% elif contracts %}
+      {% for contract in contracts %}
+        <article class="supplier-portal-contract">
+          <dl class="supplier-portal-contract-header">
+            <div>
+              <dt>Contract Number</dt>
+              <dd>{{ contract.contract_number }}</dd>
+            </div>
+            <div>
+              <dt>Award Date</dt>
+              <dd>{{ contract.award_date|default:"—" }}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>{{ contract.status|default:"—" }}</dd>
+            </div>
+          </dl>
+          <div class="product-table-wrap">
+            <table class="product-table">
+              <caption class="visually-hidden">CLINs for contract {{ contract.contract_number }}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">CLIN #</th>
+                  <th scope="col">NSN</th>
+                  <th scope="col">Due Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for clin in contract.clins %}
+                  <tr>
+                    <td>{{ clin.clin_number }}</td>
+                    <td>{{ clin.nsn|default:"—" }}</td>
+                    <td>{{ clin.due_date|default:"—" }}</td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="3">No CLINs on file.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="supplier-portal-note">
+        <p>No contracts on file yet.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if state == 'ok' %}
     <div class="supplier-portal-note">
       <p>This information is read live from STATZ's supplier system. To request a correction, contact <a href="mailto:info@statzcorp.com">info@statzcorp.com</a> or 608-798-4500.</p>
     </div>

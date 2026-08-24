@@ -2,6 +2,7 @@
 
 ## 2026-08-24
 ### Added
+- Supplier Portal dashboard now includes a Supplier Contracts section: contract number, award date, status, and CLIN # / NSN / due date, loaded live from STATZWeb. Dollar values are not shown. A STATZWeb outage degrades to a friendly message instead of failing the page. No local contract database tables were added.
 - Admin password reset — active staff users can request Django's secure, tokenized password-reset link from the admin login page, with delivery through STATZWeb's Microsoft Graph email service.
 - The Our Team page is now admin-editable: staff can add, move, reorder, publish, and unpublish team groups and members without a redeploy.
 - The Our Team banner can now be managed in the admin with the existing static team image retained as a fallback. Replaced or deleted team images are removed from active Blob or local storage.

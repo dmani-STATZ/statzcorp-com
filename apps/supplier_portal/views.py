@@ -19,7 +19,7 @@ from .forms import (
     SetPasswordForm,
     SupplierLoginForm,
 )
-from .presenters import present_supplier
+from .presenters import present_supplier, present_supplier_contracts
 from .statzweb_client import (
     StatzWebAPIError,
     StatzWebHTTPError,
@@ -27,6 +27,7 @@ from .statzweb_client import (
     StatzWebUnavailable,
     get_document_download_url,
     get_supplier,
+    get_supplier_contracts,
     verify_supplier,
 )
 from .tokens import read_set_password_token
@@ -118,6 +119,18 @@ class SupplierDashboardView(SupplierLoginRequiredMixin, TemplateView):
                 'state': 'unavailable',
                 'notice': SERVICE_UNAVAILABLE_ERROR,
             })
+
+        try:
+            raw_contracts = get_supplier_contracts(account.cage_code)
+            context['contracts'] = present_supplier_contracts(raw_contracts)
+            context['contracts_error'] = False
+        except StatzWebAPIError:
+            logger.exception(
+                "STATZWeb failed while loading contracts for CAGE %s",
+                account.cage_code,
+            )
+            context['contracts'] = None
+            context['contracts_error'] = True
         return context
 
 

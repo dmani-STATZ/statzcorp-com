@@ -17,7 +17,7 @@ and edit.
 
 | Phase | Direction | What it covers |
 |-------|-----------|-----------------|
-| Phase 1 | Read-only | Supplier profile, contacts, certifications, classifications, documents |
+| Phase 1 | Read-only | Supplier profile, contacts, certifications, classifications, documents, contracts (CLIN list, no dollar values) |
 | Phase 2 | Read + write | Supplier can edit a defined subset of its own profile/contacts, upload documents |
 
 Phase 2 endpoints are included below so the schema is stable across both phases, but STATZWeb can
@@ -235,6 +235,53 @@ bytes through `statzcorp-com`. Keeps large-file bandwidth off the public site's 
 statzcorp-com needing Blob credentials at all. `expires_at` should be short (minutes, not hours)
 since the URL will typically be used immediately by the browser.
 
+### 4.4 Supplier contracts
+
+Read-only contract and CLIN listing for the authenticated supplier's dashboard. Dollar, price,
+and funding fields are **intentionally excluded from Phase 1**. Any future inclusion of those
+fields is a deliberate scope change to renegotiate — not an oversight to patch around. The
+statzcorp-com presenter allowlists only the keys below, so extra fields in a STATZWeb payload
+are dropped before they reach a template.
+
+```
+GET /suppliers/{cage_code}/contracts/
+```
+
+Response `200`:
+```json
+{
+  "contracts": [
+    {
+      "contract_number": "SPE7L1-24-D-0042",
+      "award_date": "2024-03-15",
+      "status": "Active",
+      "clins": [
+        { "clin_number": "0001", "nsn": "5340-01-234-5678", "due_date": "2024-09-01" },
+        { "clin_number": "0002", "nsn": "5340-01-234-9999", "due_date": null }
+      ]
+    }
+  ]
+}
+```
+
+| Field | Notes |
+|---|---|
+| `contract_number` | Identifying contract number as stored on STATZWeb |
+| `award_date` | ISO 8601 date (`YYYY-MM-DD`), or omit/null if unknown |
+| `status` | Contract status label as stored on STATZWeb (display string; omit/null if unknown) |
+| `clins` | Array of CLIN rows; may be empty |
+| `clins[].clin_number` | CLIN identifier (string; zero-padded values are fine) |
+| `clins[].nsn` | National Stock Number; may be empty/null |
+| `clins[].due_date` | ISO 8601 date (`YYYY-MM-DD`), or `null` when no due date is on file |
+
+Response `404` if the cage code does not exist or the supplier is archived (same convention as
+§4.1 `verify/` and §3.2). On the statzcorp-com side this is **"nothing to show," not an error**
+— the client returns `None` and the dashboard renders an empty contracts list. Network failure,
+missing configuration, or an unexpected non-2xx/404 remain real failure states.
+
+This endpoint introduces no schema on `statzcorp-com`. Contract data is not stored locally
+(SQLite or otherwise); STATZWeb is the system of record.
+
 ---
 
 ## 5. Phase 2 — Write endpoints
@@ -325,5 +372,11 @@ runaway retry loop on the statzcorp-com side, not to defend against the caller i
 
 ## 8. Change log
 
+- 2026-08-24 — Added `status` to the §4.4 contract object (display label; still no dollar/price/
+  funding fields).
+- 2026-08-24 — Added §4.4 Supplier contracts (`GET /suppliers/{cage_code}/contracts/`). Documents
+  the 200 payload (contract number, award date, CLIN number/NSN/due date only), 404-as-empty for
+  unknown or archived cage codes, and the explicit Phase 1 exclusion of dollar/price/funding
+  fields.
 - 2026-07-20 — Initial draft. Auth model (API key + HMAC), Phase 1 read endpoints, Phase 2 direct
   write (no approval queue, staff notified per write), field allowlist/exclusion list.
