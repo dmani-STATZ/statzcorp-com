@@ -10,6 +10,7 @@
 - Supplier Portal dashboard appeared blank (including the Log Out button) once it grew past a screenful — the page fade-in effect never completed on tall pages, leaving the content invisible. Long pages now fade in correctly, and page content stays visible even if the site's JavaScript fails to load.
 - Password managers now recognize the Supplier Portal CAGE code as the username field, so logins can be saved and filled automatically. Setting a new password also saves it against the correct CAGE code.
 ### Changed
+- Supplier Contracts on the Supplier Portal dashboard are now a single compact table — one row per CLIN, with the contract number, award date, and status spanning that contract's rows — instead of a separate card and table per contract.
 - Supplier Portal login, request-access, and set-password forms now show field labels instead of relying on placeholder text alone.
 
 ## 2026-08-21

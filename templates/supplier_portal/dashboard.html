@@ -260,49 +260,46 @@
         <p>We couldn't load your contract data just now — please check back shortly, or contact us at <a href="mailto:info@statzcorp.com">info@statzcorp.com</a> or 608-798-4500.</p>
       </div>
     {% elif contracts %}
-      {% for contract in contracts %}
-        <article class="supplier-portal-contract">
-          <dl class="supplier-portal-contract-header">
-            <div>
-              <dt>Contract Number</dt>
-              <dd>{{ contract.contract_number }}</dd>
-            </div>
-            <div>
-              <dt>Award Date</dt>
-              <dd>{{ contract.award_date|default:"—" }}</dd>
-            </div>
-            <div>
-              <dt>Status</dt>
-              <dd>{{ contract.status|default:"—" }}</dd>
-            </div>
-          </dl>
-          <div class="product-table-wrap">
-            <table class="product-table">
-              <caption class="visually-hidden">CLINs for contract {{ contract.contract_number }}</caption>
-              <thead>
-                <tr>
-                  <th scope="col">CLIN #</th>
-                  <th scope="col">NSN</th>
-                  <th scope="col">Due Date</th>
-                </tr>
-              </thead>
-              <tbody>
+      <div class="supplier-portal-table-wrap">
+        <table class="supplier-portal-table">
+          <caption class="visually-hidden">Supplier contracts and their CLINs</caption>
+          <thead>
+            <tr>
+              <th scope="col">Contract #</th>
+              <th scope="col">Award Date</th>
+              <th scope="col">Status</th>
+              <th scope="col">CLIN #</th>
+              <th scope="col">NSN</th>
+              <th scope="col">Due Date</th>
+            </tr>
+          </thead>
+          {% for contract in contracts %}
+            <tbody>
+              {% if contract.clins %}
                 {% for clin in contract.clins %}
                   <tr>
+                    {% if forloop.first %}
+                      <th scope="rowgroup" rowspan="{{ contract.clins|length }}">{{ contract.contract_number }}</th>
+                      <td rowspan="{{ contract.clins|length }}">{{ contract.award_date|default:"—" }}</td>
+                      <td rowspan="{{ contract.clins|length }}">{{ contract.status|default:"—" }}</td>
+                    {% endif %}
                     <td>{{ clin.clin_number }}</td>
                     <td>{{ clin.nsn|default:"—" }}</td>
                     <td>{{ clin.due_date|default:"—" }}</td>
                   </tr>
-                {% empty %}
-                  <tr>
-                    <td colspan="3">No CLINs on file.</td>
-                  </tr>
                 {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </article>
-      {% endfor %}
+              {% else %}
+                <tr>
+                  <th scope="rowgroup">{{ contract.contract_number }}</th>
+                  <td>{{ contract.award_date|default:"—" }}</td>
+                  <td>{{ contract.status|default:"—" }}</td>
+                  <td colspan="3">No CLINs on file.</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          {% endfor %}
+        </table>
+      </div>
     {% else %}
       <div class="supplier-portal-note">
         <p>No contracts on file yet.</p>

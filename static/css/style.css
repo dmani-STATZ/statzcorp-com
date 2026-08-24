@@ -1815,44 +1815,6 @@ body.login .statz-admin-auth #login-form {
   text-transform: uppercase;
 }
 
-.supplier-portal-contract {
-  margin-top: 20px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  background: var(--white);
-}
-
-.supplier-portal-contract:first-of-type {
-  margin-top: 0;
-}
-
-.supplier-portal-contract-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 32px;
-  margin: 0 0 4px;
-}
-
-.supplier-portal-contract-header dt {
-  color: var(--gray-mid);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-}
-
-.supplier-portal-contract-header dd {
-  margin: 4px 0 0;
-  color: var(--navy);
-  font-weight: 700;
-}
-
-.supplier-portal-contract .product-table-wrap {
-  margin-top: 12px;
-}
-
 .supplier-portal-deflist {
   display: grid;
   grid-template-columns: minmax(10rem, 14rem) 1fr;
@@ -1913,6 +1875,22 @@ body.login .statz-admin-auth #login-form {
   font-weight: 600;
   letter-spacing: 0.3px;
   text-transform: uppercase;
+}
+
+/* Row-grouped tables (contracts: one row per CLIN, contract cells spanned). */
+.supplier-portal-table tbody + tbody th,
+.supplier-portal-table tbody + tbody td {
+  border-top: 2px solid var(--primary);
+}
+
+.supplier-portal-table th[scope="rowgroup"] {
+  background: var(--white);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
 }
 
 .supplier-portal-badge {
