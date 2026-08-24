@@ -64,6 +64,7 @@ Observed in the current codebase — match these when editing:
 - **Supplier Portal client:** `apps/supplier_portal/statzweb_client.py` returns raw parsed JSON (or `None` on 404). Do not allowlist in the client. New reads go through `_request()` (do not reimplement HMAC signing). `get_supplier_contracts(cage_code)` is `GET /suppliers/{cage_code}/contracts/` per `docs/supplier-portal-api-contract.md` §4.4.
 - **New public page:** Add view in `apps/public/views.py`, route in `apps/public/urls.py`, template under `templates/public/`, styles in `static/css/style.css`, nav link in `templates/base.html` if discoverable. For shareable videos use `apps/videos/` instead.
 - **Video docs stay in sync:** When video-related functionality changes (model fields, admin layout, template tag signature), update [`docs/how-to-add-videos.md`](docs/how-to-add-videos.md) in the same change.
+- **Scroll reveal (`animate-on-scroll`):** `opacity: 0` until `static/js/main.js` adds `.in-view`. Rules live in `static/css/style.css` and are scoped to `.js` (set by a one-line inline script in `templates/base.html`) so content stays visible when JS doesn't run. The IntersectionObserver `threshold` must stay `0` — a ratio threshold can never be met by an element taller than the viewport, which leaves it invisible forever. Do not wrap application pages (supplier portal cards, forms, data tables) in this class; it is for marketing-page blocks.
 
 > Not yet established. Do not assume — confirm with Dion (IT & Manufacturing Operations) before acting: Python formatting/lint rules; whether to delete root `css/` / `js/` duplicates.
 
@@ -101,6 +102,8 @@ Observed in the current codebase — match these when editing:
 No `CONTRIBUTING.md`, commit hooks, or CI checks found. Only one commit on `main` exists (`777246d`).
 
 ## Known Gotchas
+
+- **Supplier Portal form fields carry deliberate `autocomplete` values.** `templates/supplier_portal/_cage_code_field.html` is the shared CAGE-code input (`autocomplete="username"`, label text naming it as the username so heuristic-based password managers match). `set_password.html` includes a visually hidden `username` input so managers save the new password against the CAGE code — `SetPasswordForm` ignores that extra POST key. Keep these attributes when editing portal forms.
 
 - **Home hero slideshow is DB-driven.** Slides are `HeroSlide` records managed in Admin (not static files under `static/images/`). `templates/public/index.html` falls back to the legacy static slider images only when zero published `HeroSlide` rows exist. Landscape aspect-ratio and minimum-width rules are enforced in `HeroSlide.clean()` (ratio 1.5–4.0; 2000×615 panoramic recommended; width ≥ 1600px).
 - **`DJANGO_SECRET_KEY` is required** even locally — `statzcorp/settings/base.py` calls `config('DJANGO_SECRET_KEY')` with no default; missing `.env` key crashes startup.

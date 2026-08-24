@@ -171,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // ── SCROLL ANIMATION (fade-in on scroll) ───────────────────────────────────
   const animEls = document.querySelectorAll('.animate-on-scroll');
   if ('IntersectionObserver' in window && animEls.length) {
+    // threshold must stay 0: a ratio-based threshold can never be met by an
+    // element taller than the viewport, which would leave it at opacity 0
+    // forever. rootMargin supplies the "reveal just inside the fold" feel.
     const observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -178,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
 
     animEls.forEach(function (el) { observer.observe(el); });
   } else {

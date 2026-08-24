@@ -15,12 +15,10 @@
       <div class="form-field-error">{{ form.non_field_errors|join:", " }}</div>
     {% endif %}
 
-    <input type="text" id="id_cage_code" name="cage_code" placeholder="CAGE Code *" required autocomplete="username" value="{{ form.cage_code.value|default:'' }}">
-    {% if form.cage_code.errors %}
-      <div class="form-field-error">{{ form.cage_code.errors|join:", " }}</div>
-    {% endif %}
+    {% include 'supplier_portal/_cage_code_field.html' %}
 
-    <input type="password" id="id_password" name="password" placeholder="Password *" required autocomplete="current-password">
+    <label for="id_password">Password</label>
+    <input type="password" id="id_password" name="password" required autocomplete="current-password">
     {% if form.password.errors %}
       <div class="form-field-error">{{ form.password.errors|join:", " }}</div>
     {% endif %}

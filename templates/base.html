@@ -9,10 +9,7 @@
   {% block extra_head %}{% endblock %}
   <link rel="icon" href="{% static 'images/StatzCorpColorFINAL.png' %}" type="image/png">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <style>
-    .animate-on-scroll { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
-    .animate-on-scroll.in-view { opacity: 1; transform: none; }
-  </style>
+  <script>document.documentElement.classList.add('js');</script>
   {% block extra_css %}{% endblock %}
 </head>
 <body>

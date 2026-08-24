@@ -1,0 +1,9 @@
+{# Shared CAGE-code input. The label text names it as the username so password
+   managers that rely on label heuristics (not just autocomplete) match it. #}
+<label for="id_cage_code">CAGE Code <span class="form-label-hint">(your username)</span></label>
+<input type="text" id="id_cage_code" name="cage_code" placeholder="e.g. 3WGD1" required
+       autocomplete="username" autocapitalize="characters" spellcheck="false"
+       value="{{ form.cage_code.value|default:'' }}">
+{% if form.cage_code.errors %}
+  <div class="form-field-error">{{ form.cage_code.errors|join:", " }}</div>
+{% endif %}

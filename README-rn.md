@@ -6,6 +6,11 @@
 - Admin password reset — active staff users can request Django's secure, tokenized password-reset link from the admin login page, with delivery through STATZWeb's Microsoft Graph email service.
 - The Our Team page is now admin-editable: staff can add, move, reorder, publish, and unpublish team groups and members without a redeploy.
 - The Our Team banner can now be managed in the admin with the existing static team image retained as a fallback. Replaced or deleted team images are removed from active Blob or local storage.
+### Fixed
+- Supplier Portal dashboard appeared blank (including the Log Out button) once it grew past a screenful — the page fade-in effect never completed on tall pages, leaving the content invisible. Long pages now fade in correctly, and page content stays visible even if the site's JavaScript fails to load.
+- Password managers now recognize the Supplier Portal CAGE code as the username field, so logins can be saved and filled automatically. Setting a new password also saves it against the correct CAGE code.
+### Changed
+- Supplier Portal login, request-access, and set-password forms now show field labels instead of relying on placeholder text alone.
 
 ## 2026-08-21
 ### Added

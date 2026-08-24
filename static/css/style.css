@@ -981,6 +981,26 @@ hr.section-divider {
   padding-bottom: 8px;
 }
 
+.contact-form label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--navy);
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.form-label-hint {
+  color: var(--gray-mid);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .contact-form input,
 .contact-form textarea {
   width: 100%;
@@ -1938,6 +1958,30 @@ body.login .statz-admin-auth #login-form {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ==================================================
+   SCROLL REVEAL
+   Gated on the `js` class set in templates/base.html so content stays
+   visible if main.js never runs. static/js/main.js adds `.in-view`.
+================================================== */
+.js .animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.js .animate-on-scroll.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ==================================================
