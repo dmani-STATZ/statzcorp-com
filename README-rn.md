@@ -1,5 +1,11 @@
 # STATZ Corporation Website — Release Notes
 
+## 2026-08-24
+### Added
+- Admin password reset — active staff users can request Django's secure, tokenized password-reset link from the admin login page, with delivery through STATZWeb's Microsoft Graph email service.
+- The Our Team page is now admin-editable: staff can add, move, reorder, publish, and unpublish team groups and members without a redeploy.
+- The Our Team banner can now be managed in the admin with the existing static team image retained as a fallback. Replaced or deleted team images are removed from active Blob or local storage.
+
 ## 2026-08-21
 ### Added
 - Supplier Portal login page now explains how first-time access works: CAGE code only (no separate signup), confirm the email STATZ has on file, then set your own password.

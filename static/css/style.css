@@ -1271,6 +1271,32 @@ body.login a:hover {
   color: var(--accent-soft);
 }
 
+.statz-admin-auth {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 24px;
+}
+
+.statz-admin-auth h1 {
+  color: var(--navy);
+  margin-bottom: 16px;
+}
+
+body.login .statz-admin-auth #login-form {
+  box-shadow: none;
+  padding: 12px 0 0;
+}
+
+.statz-admin-auth .help {
+  margin-top: 8px;
+}
+
+.statz-admin-auth__link {
+  margin-top: 18px;
+  text-align: center;
+}
+
 /* ==================================================
    BACK TO TOP
 ================================================== */
