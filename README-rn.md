@@ -1,5 +1,9 @@
 # STATZ Corporation Website — Release Notes
 
+## 2026-09-02
+### Added
+- Supplier Portal contracts now show PO Number at both the contract level and the CLIN level, loaded live from STATZWeb. Both values are always displayed even when they match; a missing PO Number uses the same dash as a missing due date.
+
 ## 2026-08-24
 ### Added
 - Supplier Portal dashboard now includes a Supplier Contracts section: contract number, award date, status, and CLIN # / NSN / due date, loaded live from STATZWeb. Dollar values are not shown. A STATZWeb outage degrades to a friendly message instead of failing the page. No local contract database tables were added.

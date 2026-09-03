@@ -267,8 +267,10 @@
             <tr>
               <th scope="col">Contract #</th>
               <th scope="col">Award Date</th>
+              <th scope="col">PO Number</th>
               <th scope="col">Status</th>
               <th scope="col">CLIN #</th>
+              <th scope="col">PO #</th>
               <th scope="col">NSN</th>
               <th scope="col">Due Date</th>
             </tr>
@@ -281,9 +283,11 @@
                     {% if forloop.first %}
                       <th scope="rowgroup" rowspan="{{ contract.clins|length }}">{{ contract.contract_number }}</th>
                       <td rowspan="{{ contract.clins|length }}">{{ contract.award_date|default:"—" }}</td>
+                      <td rowspan="{{ contract.clins|length }}">{{ contract.po_number|default:"—" }}</td>
                       <td rowspan="{{ contract.clins|length }}">{{ contract.status|default:"—" }}</td>
                     {% endif %}
                     <td>{{ clin.clin_number }}</td>
+                    <td>{{ clin.po_number|default:"—" }}</td>
                     <td>{{ clin.nsn|default:"—" }}</td>
                     <td>{{ clin.due_date|default:"—" }}</td>
                   </tr>
@@ -292,8 +296,9 @@
                 <tr>
                   <th scope="rowgroup">{{ contract.contract_number }}</th>
                   <td>{{ contract.award_date|default:"—" }}</td>
+                  <td>{{ contract.po_number|default:"—" }}</td>
                   <td>{{ contract.status|default:"—" }}</td>
-                  <td colspan="3">No CLINs on file.</td>
+                  <td colspan="4">No CLINs on file.</td>
                 </tr>
               {% endif %}
             </tbody>

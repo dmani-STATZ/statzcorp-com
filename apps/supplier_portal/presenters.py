@@ -326,6 +326,7 @@ def _present_clin(item):
     return {
         'clin_number': clin_number,
         'nsn': _plain_text(item.get('nsn')),
+        'po_number': _plain_text(item.get('po_number')),
         'due_date': _plain_text(item.get('due_date')),
     }
 
@@ -345,6 +346,7 @@ def _present_contract(item):
     return {
         'contract_number': contract_number,
         'award_date': _plain_text(item.get('award_date')),
+        'po_number': _plain_text(item.get('po_number')),
         'status': _plain_text(item.get('status')),
         'clins': clins,
     }
@@ -354,10 +356,11 @@ def present_supplier_contracts(raw_data):
     """
     Allowlist STATZWeb contract payloads for template context.
 
-    Reads only contract_number, award_date, status, and per-CLIN clin_number,
-    nsn, and due_date. Skips malformed contract/CLIN entries rather than
-    raising. Dollar/price/funding keys are never copied even if STATZWeb
-    sends them.
+    Reads only contract_number, award_date, po_number, status, and per-CLIN
+    clin_number, nsn, po_number, and due_date. Contract-level and CLIN-level
+    po_number are distinct fields and are both copied even when they match.
+    Skips malformed contract/CLIN entries rather than raising.
+    Dollar/price/funding keys are never copied even if STATZWeb sends them.
     """
     if not isinstance(raw_data, dict):
         return []

@@ -6,9 +6,11 @@ public site (`statzcorp-com`). `statzcorp-com` hosts supplier login and the port
 supplier business data of its own and calls this API server-to-server on every portal page load
 and edit.
 
-**Status:** Not yet implemented on either side. This document is the spec to build against.
+**Status:** Phase 1 read endpoints are implemented on both sides and live in production
+(verify, supplier profile, document download URL, and contracts). Phase 2 write endpoints
+are specified below and are **not yet implemented**.
 
-**Audience:** Whoever implements the API on the STATZWeb side, and whoever builds the
+**Audience:** Whoever maintains the API on the STATZWeb side, and whoever builds the
 `statzcorp-com` API client against it.
 
 ---
@@ -254,10 +256,11 @@ Response `200`:
     {
       "contract_number": "SPE7L1-24-D-0042",
       "award_date": "2024-03-15",
+      "po_number": "PO-1042",
       "status": "Active",
       "clins": [
-        { "clin_number": "0001", "nsn": "5340-01-234-5678", "due_date": "2024-09-01" },
-        { "clin_number": "0002", "nsn": "5340-01-234-9999", "due_date": null }
+        { "clin_number": "0001", "po_number": "PO-1042", "nsn": "5340-01-234-5678", "due_date": "2024-09-01" },
+        { "clin_number": "0002", "po_number": null, "nsn": "5340-01-234-9999", "due_date": null }
       ]
     }
   ]
@@ -268,9 +271,11 @@ Response `200`:
 |---|---|
 | `contract_number` | Identifying contract number as stored on STATZWeb |
 | `award_date` | ISO 8601 date (`YYYY-MM-DD`), or omit/null if unknown |
+| `po_number` | Contract-level purchase order number; omit/null if unknown. Distinct from `clins[].po_number` — both are returned and rendered even when they match |
 | `status` | Contract status label as stored on STATZWeb (display string; omit/null if unknown) |
 | `clins` | Array of CLIN rows; may be empty |
 | `clins[].clin_number` | CLIN identifier (string; zero-padded values are fine) |
+| `clins[].po_number` | CLIN-level purchase order number; omit/null if unknown. Distinct from the contract-level `po_number` |
 | `clins[].nsn` | National Stock Number; may be empty/null |
 | `clins[].due_date` | ISO 8601 date (`YYYY-MM-DD`), or `null` when no due date is on file |
 
@@ -372,6 +377,8 @@ runaway retry loop on the statzcorp-com side, not to defend against the caller i
 
 ## 8. Change log
 
+- 2026-09-02 — Added contract-level and CLIN-level `po_number` to §4.4. Corrected the document
+  status line: Phase 1 reads are implemented and live; Phase 2 writes remain unimplemented.
 - 2026-08-24 — Added `status` to the §4.4 contract object (display label; still no dollar/price/
   funding fields).
 - 2026-08-24 — Added §4.4 Supplier contracts (`GET /suppliers/{cage_code}/contracts/`). Documents
