@@ -31,7 +31,7 @@ The active application is **Django 5.2** (`requirements.txt`, installed 5.2.16 i
 |------|--------|----------|
 | Project settings split (base / local / production) | Done | `statzcorp/settings/` |
 | Marketing pages (home, about, team, products, capabilities, accreditations, resources) | Done | `apps/public/`, `templates/public/` |
-| Contact form → DB + email notification | Done | `apps/contact/` — `ContactMessage` + admin-managed `ContactRecipient` list (queried at send-time); `CONTACT_EMAIL_TO` is a comma-separated fallback only when no active recipients exist |
+| Contact form → anti-spam quarantine + DB + email notification | Done | `apps/contact/` — self-hosted ALTCHA proof-of-work, shared database-backed replay protection, dual honeypots, signed render timing, and content scoring; flagged `ContactMessage` rows are quarantined without email; clean messages notify the admin-managed `ContactRecipient` list (queried at send-time), with `CONTACT_EMAIL_TO` as fallback |
 | Surveys with classification field + public manager | Done | `apps/surveys/` |
 | Video hosting (Azure Blob / local filesystem) | Done | `apps/videos/` — `VideoAsset`, public `/videos/<slug>/`, admin upload |
 | Admin for contact messages and surveys | Done | `apps/*/admin.py` |
@@ -79,7 +79,7 @@ Browser
   → Django URLConf (statzcorp/urls.py)
        → apps.accounts   Django auth password-reset views → STATZWeb Graph email
        → apps.public     TemplateViews → templates/public/* (+ admin-managed hero/team media)
-       → apps.contact    FormView → ContactMessage DB + email to ContactRecipient (fallback: CONTACT_EMAIL_TO)
+       → apps.contact    FormView → fail-closed anti-spam checks → ContactMessage DB → clean-only email to ContactRecipient
        → apps.surveys    List/detail → Survey/Question/Submission/Answer
        → apps.videos     DetailView → VideoAsset (Blob Storage or local media)
        → apps.supplier_portal  Session-based supplier login → live STATZWeb-backed dashboard + CAGE-scoped document download passthrough (no supplier business data stored locally)
@@ -99,6 +99,8 @@ Browser
 **Azure App Service / large video uploads:** Gunicorn’s `--timeout` may need to stay high enough for Blob uploads through admin (e.g. 300s or more). This is a deployment setting on the Azure startup command — `startup.sh` in-repo already uses `--timeout=600`; re-check if ops changes the Startup Command in the portal.
 
 **Email:** Console backend forced in `statzcorp/settings/local.py`. Production uses SMTP settings from env (Office 365 host defaults in `base.py` / `.env.example`) for contact notifications. Supplier and staff password-reset email intentionally uses STATZWeb's Graph-backed `send_email()` API instead of Django SMTP.
+
+**Contact anti-spam:** The public form uses a fully self-hosted ALTCHA proof-of-work challenge. Accepted challenge IDs are stored in the shared `altcha_cache` database cache table so replays are rejected across Gunicorn workers and App Service instances; deployments create it with `python manage.py createcachetable altcha_cache` (also enforced by `startup.sh`). Two off-screen honeypots (`url` and `subject`) and a signed render timestamp reject scripted submissions before any `ContactMessage` save or email. Submissions that pass those controls are scored locally. A score of 4 or more sets `is_flagged`; flagged messages remain saved for staff review under **Admin → Contact → Contact Messages** by filtering **Is flagged = Yes**, but are never emailed. Notification text for clean submissions defangs submitted URLs.
 
 **Auth for public site:** Anonymous public pages. Optional `Submission.user` FK if authenticated. Entra ID / MSAL packages are commented out in `requirements.txt` (“add when ready for internal views”) — not active. Staff/admin accounts use `django.contrib.auth`; `apps/accounts` adds an enumeration-safe self-service password reset flow using Django's standard tokens and STATZWeb Graph email. Supplier Portal (`apps/supplier_portal`) is a third, separate identity system: session key `supplier_portal_account_id` against `SupplierPortalAccount`, deliberately not `django.contrib.auth` — a supplier login is a company (CAGE code), not a staff/admin identity. Supplier passwords are entirely self-service (signed emailed set-password links); staff never sets, sees, or resets a supplier password — by design (“chain of custody” decision, 2026-07-20). The on-file `contact_email` is sourced live from STATZWeb's `verify/` endpoint (`statzweb_client.py`) on every request-access attempt, auto-provisioning/refreshing the local `SupplierPortalAccount` — no separate staff account-creation step for a supplier that already exists in STATZWeb.
 

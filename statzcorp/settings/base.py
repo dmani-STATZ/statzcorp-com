@@ -14,6 +14,15 @@ DEBUG      = config('DJANGO_DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('DJANGO_ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# ── Contact form proof-of-work ────────────────────────────────────────────────
+ALTCHA_HMAC_KEY = config('ALTCHA_HMAC_KEY', default=SECRET_KEY)  # Sign challenges without requiring a new deployment secret.
+ALTCHA_VERIFICATION_ENABLED = True  # Fail closed by requiring server verification.
+ALTCHA_CHALLENGE_EXPIRE = 20 * 60 * 1000  # Expire challenges after 20 minutes.
+ALTCHA_CACHE_ALIAS = 'altcha'  # Share replay records through the application database.
+ALTCHA_JS_URL = 'js/altcha-2.3.0.min.js'  # Load the pinned, tenant-hosted widget.
+ALTCHA_JS_TRANSLATIONS_URL = ''  # Translations are disabled, so no extra script is loaded.
+ALTCHA_INCLUDE_TRANSLATIONS = False  # Use the widget's bundled English strings.
+
 # ── Application definition ────────────────────────────────────────────────────
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -26,6 +35,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'storages',  # django-storages — Azure Blob backend when AZURE_CONNECTION_STRING is set
+    'django_altcha',
 ]
 
 LOCAL_APPS = [
@@ -84,6 +94,17 @@ DATABASES = {
         'HOST':     config('DB_HOST',     default=''),
         'PORT':     config('DB_PORT',     default=''),
     }
+}
+
+# ALTCHA replay records must be shared across workers and App Service instances.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'altcha': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'altcha_cache',
+    },
 }
 
 # ── Auth password validation ──────────────────────────────────────────────────

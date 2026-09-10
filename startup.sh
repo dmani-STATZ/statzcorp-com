@@ -33,6 +33,9 @@ python manage.py collectstatic --noinput
 echo "Applying database migrations..."
 python manage.py migrate --noinput
 
+echo "Ensuring the shared ALTCHA replay cache table exists..."
+python manage.py createcachetable altcha_cache
+
 echo "Launching gunicorn..."
 exec gunicorn statzcorp.wsgi:application \
     --bind=0.0.0.0:${PORT:-8000} \

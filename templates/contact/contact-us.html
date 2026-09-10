@@ -3,55 +3,6 @@
 
 {% block title %}Contact Us — STATZ Corporation{% endblock %}
 
-{% block extra_css %}
-  <style>
-    .contact-info-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-
-    .contact-info-card {
-      background: var(--navy);
-      border-radius: 8px;
-      padding: 28px 22px;
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .contact-info-card svg {
-      width: 28px;
-      height: 28px;
-      fill: var(--accent);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .contact-info-card h4 {
-      font-size: 14px;
-      color: rgba(255,255,255,.7);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .contact-info-card p,
-    .contact-info-card a {
-      font-size: 15px;
-      color: var(--white);
-      line-height: 1.6;
-    }
-
-    .contact-info-card a:hover { color: rgba(255,255,255,.75); }
-
-    @media (max-width: 768px) {
-      .contact-info-cards { grid-template-columns: 1fr; }
-    }
-  </style>
-{% endblock %}
-
 {% block banner %}
   <!-- ===== INNER HEADER ===== -->
   <section id="inner-header">
@@ -120,9 +71,20 @@
           <h3>Send Us a Message</h3>
           <form class="contact-form" method="post" action="{% url 'contact:contact_us' %}" novalidate>
             {% csrf_token %}
+            {{ form.ts }}
 
-            <!-- Honeypot -->
-            {{ form.website }}
+            <div class="contact-form-trap" aria-hidden="true">
+              <label for="{{ form.url.id_for_label }}">Website URL</label>
+              {{ form.url }}
+            </div>
+            <div class="contact-form-trap" aria-hidden="true">
+              <label for="{{ form.subject.id_for_label }}">Message Subject</label>
+              {{ form.subject }}
+            </div>
+
+            {% if form.non_field_errors %}
+              <div class="form-field-error">{{ form.non_field_errors|join:", " }}</div>
+            {% endif %}
 
             <input type="text" id="contact-name" name="name" placeholder="Your Name *" required value="{{ form.name.value|default:'' }}">
             {% if form.name.errors %}
@@ -145,6 +107,14 @@
             {% if form.message.errors %}
               <div class="form-field-error">{{ form.message.errors|join:", " }}</div>
             {% endif %}
+
+            <div class="contact-verification">
+              <span class="contact-verification-label">Human verification</span>
+              {{ form.altcha }}
+              {% if form.altcha.errors %}
+                <div class="form-field-error">{{ form.altcha.errors|join:", " }}</div>
+              {% endif %}
+            </div>
 
             <button type="submit" id="submit-btn">Send Message</button>
           </form>

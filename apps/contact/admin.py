@@ -4,10 +4,19 @@ from .models import ContactMessage, ContactRecipient
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'company', 'email', 'phone', 'created_at', 'is_processed')
-    list_filter = ('is_processed', 'created_at')
+    list_display = (
+        'name',
+        'company',
+        'email',
+        'phone',
+        'is_flagged',
+        'spam_score',
+        'created_at',
+        'is_processed',
+    )
+    list_filter = ('is_flagged', 'is_processed', 'created_at')
     search_fields = ('name', 'company', 'email', 'message')
-    readonly_fields = ('created_at',)
+    readonly_fields = ('created_at', 'spam_score', 'flag_reasons')
     ordering = ('-created_at',)
 
 

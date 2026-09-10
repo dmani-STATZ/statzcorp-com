@@ -8,6 +8,9 @@ class ContactMessage(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_processed = models.BooleanField(default=False)
+    spam_score = models.PositiveSmallIntegerField(default=0)
+    is_flagged = models.BooleanField(default=False, db_index=True)
+    flag_reasons = models.JSONField(default=list, blank=True)
 
     class Meta:
         ordering = ['-created_at']

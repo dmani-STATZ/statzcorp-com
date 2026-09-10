@@ -963,6 +963,47 @@ hr.section-divider {
 /* ==================================================
    CONTACT PAGE
 ================================================== */
+.contact-info-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.contact-info-card {
+  background: var(--navy);
+  border-radius: 8px;
+  padding: 28px 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contact-info-card svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contact-info-card h4 {
+  font-size: 14px;
+  color: rgba(255,255,255,.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.contact-info-card p,
+.contact-info-card a {
+  font-size: 15px;
+  color: var(--white);
+  line-height: 1.6;
+}
+
+.contact-info-card a:hover { color: rgba(255,255,255,.75); }
+
 .contact-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1023,6 +1064,26 @@ hr.section-divider {
 }
 
 .contact-form textarea { height: 160px; resize: vertical; }
+
+.contact-form-trap {
+  position: absolute;
+  left: -9999px;
+}
+
+.contact-verification {
+  margin: 4px 0 18px;
+}
+
+.contact-verification-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--navy);
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
 
 .contact-form button {
   background: var(--primary);
@@ -1976,6 +2037,7 @@ body.login .statz-admin-auth #login-form {
 }
 
 @media (max-width: 768px) {
+  .contact-info-cards { grid-template-columns: 1fr; }
   .nav-toggle { display: flex; }
   .nav-menu {
     display: none;

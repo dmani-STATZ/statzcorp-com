@@ -1,16 +1,26 @@
+import time
+
 from django.shortcuts import render, redirect
 from django.views.generic import FormView
 from django.contrib import messages
+from django.core import signing
 from django.core.mail import send_mail
 from django.conf import settings
-from .forms import ContactForm
+
+from .forms import ContactForm, HUMAN_VERIFICATION_ERROR
 from .models import ContactRecipient
+from .spam import defang_urls, score_submission
 
 
 class ContactUsView(FormView):
     template_name = 'contact/contact-us.html'
     form_class = ContactForm
     success_url = '/contact-us/'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['ts'] = signing.dumps(int(time.time()), salt='contact-form-render')
+        return initial
 
     def get_recipient_list(self):
         """
@@ -34,20 +44,40 @@ class ContactUsView(FormView):
         return settings.CONTACT_EMAIL_TO
 
     def form_valid(self, form):
-        # Save to database
-        message_obj = form.save()
+        message_obj = form.save(commit=False)
+        score, reasons = score_submission(
+            name=form.cleaned_data['name'],
+            company=form.cleaned_data.get('company') or '',
+            email=form.cleaned_data['email'],
+            phone=form.cleaned_data['phone'],
+            message=form.cleaned_data['message'],
+        )
+        message_obj.spam_score = score
+        message_obj.is_flagged = score >= 4
+        message_obj.flag_reasons = reasons
+        message_obj.save()
 
-        # Build email content
-        subject = f"[STATZ Web Contact] New Message from {message_obj.name}"
+        if message_obj.is_flagged:
+            messages.success(self.request, "Thank you! Your message has been received. We will be in touch shortly.")
+            return super().form_valid(form)
+
+        safe_name = defang_urls(message_obj.name)
+        safe_company = defang_urls(message_obj.company or 'N/A')
+        safe_email = defang_urls(message_obj.email)
+        safe_phone = defang_urls(message_obj.phone)
+        safe_message = defang_urls(message_obj.message)
+
+        subject = f"[STATZ Web Contact] New Message from {safe_name}"
         body = (
             f"New contact form submission:\n"
             f"=================================\n"
-            f"Name:    {message_obj.name}\n"
-            f"Company: {message_obj.company or 'N/A'}\n"
-            f"Email:   {message_obj.email}\n"
-            f"Phone:   {message_obj.phone}\n"
+            f"Name:    {safe_name}\n"
+            f"Company: {safe_company}\n"
+            f"Email:   {safe_email}\n"
+            f"Phone:   {safe_phone}\n"
             f"=================================\n\n"
-            f"{message_obj.message}\n"
+            f"{safe_message}\n\n"
+            f"Links above have been defanged. Do not re-enable and open them.\n"
         )
 
         recipient_list = self.get_recipient_list()
@@ -70,5 +100,5 @@ class ContactUsView(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "Please correct the errors in the form below.")
+        messages.error(self.request, HUMAN_VERIFICATION_ERROR)
         return super().form_invalid(form)

@@ -1,5 +1,9 @@
 # STATZ Corporation Website — Release Notes
 
+## 2026-09-10
+### Added
+- The Contact Us form now includes a human verification check to reduce unwanted automated messages.
+
 ## 2026-09-02
 ### Added
 - Supplier Portal contracts now show PO Number at both the contract level and the CLIN level, loaded live from STATZWeb. Both values are always displayed even when they match; a missing PO Number uses the same dash as a missing due date.
