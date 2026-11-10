@@ -1,8 +1,10 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.urls import reverse
 from django.views.generic import TemplateView
 
+from apps.public.inventory_diagnostics import run_inventory_connection_check
 from apps.public.inventory_service import get_public_inventory_snapshot
 
 from .models import HeroSlide, TeamGroup, TeamMember, TeamPageBanner
@@ -87,4 +89,21 @@ class PublicInventoryListView(TemplateView):
         context['snapshot_is_stale'] = snapshot.is_stale
         context['fetched_at'] = snapshot.fetched_at
         context['contact_url'] = reverse('contact:contact_us')
+        return context
+
+
+class InventoryConnectionCheckView(UserPassesTestMixin, TemplateView):
+    """TEMPORARY staff-only inventory connection check. See inventory_diagnostics.py."""
+
+    http_method_names = ['get']
+    template_name = 'public/inventory_connection_check.html'
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_active and user.is_staff
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['report'] = run_inventory_connection_check()
         return context

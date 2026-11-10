@@ -31,6 +31,9 @@
 {% block content %}
   <main class="page-content">
     <div class="container">
+      {% if user.is_staff %}
+        <p class="inv-check"><a class="inv-check-button" href="{% url 'public:inventory_connection_check' %}">Check inventory connection</a></p>
+      {% endif %}
       {% if not snapshot_available %}
         <p class="inv-status">Our inventory listing is temporarily unavailable. Please contact us for current availability.</p>
         <a class="inv-quote" href="{{ contact_url }}">Request a Quote</a>

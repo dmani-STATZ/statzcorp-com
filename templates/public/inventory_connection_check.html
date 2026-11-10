@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Inventory connection check | STATZ Corporation{% endblock %}
+{% block meta_description %}Temporary staff check of the public inventory connection.{% endblock %}
+
+{% block banner %}
+  <section id="inner-header">
+    <div class="container">
+      <h2>Inventory connection</h2>
+      <p>Temporary staff diagnostic. It does not change the public listing.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li><a href="{% url 'public:inventory' %}">Inventory</a></li>
+          <li>Connection check</li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <main class="page-content">
+    <div class="container">
+      <p class="inv-check-banner">Temporary. Logged-in staff only. Remove this page after the connection is confirmed. Secret values are not shown.</p>
+
+      <div class="inv-check-summary {% if report.ok %}inv-check-summary--ok{% endif %}">
+        <strong>{{ report.summary }}</strong>
+      </div>
+
+      {% if report.problems %}
+        <ul class="inv-check-problems">
+          {% for problem in report.problems %}
+            <li>{{ problem }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <dl class="inv-check-details">
+        <dt>Base URL configured</dt>
+        <dd>{{ report.base_url_configured }}</dd>
+        <dt>Host</dt>
+        <dd>{{ report.base_url_scheme_host|default:"(empty)" }}</dd>
+        <dt>Path</dt>
+        <dd>{{ report.base_url_path|default:"(empty)" }}</dd>
+        <dt>Path is /api/inventory/v1</dt>
+        <dd>{{ report.path_ok }}</dd>
+        <dt>API key present</dt>
+        <dd>{{ report.api_key_present }} (length {{ report.api_key_length }})</dd>
+        <dt>HMAC secret present</dt>
+        <dd>{{ report.hmac_secret_present }} (length {{ report.hmac_secret_length }})</dd>
+        <dt>Key matches Supplier Portal</dt>
+        <dd>{{ report.same_key_as_supplier_portal }}</dd>
+        <dt>Secret matches Supplier Portal</dt>
+        <dd>{{ report.same_secret_as_supplier_portal }}</dd>
+        <dt>Probe sent</dt>
+        <dd>{{ report.probed }}</dd>
+        <dt>HTTP status</dt>
+        <dd>{% if report.http_status %}{{ report.http_status }}{% else %}(none){% endif %}</dd>
+        <dt>Exception</dt>
+        <dd>{{ report.exception_class|default:"(none)" }}</dd>
+        <dt>Detail</dt>
+        <dd>{{ report.detail|default:"(none)" }}</dd>
+        <dt>Page 1 items returned</dt>
+        <dd>{% if report.raw_count is not None %}{{ report.raw_count }}{% else %}(none){% endif %}</dd>
+        <dt>Page 1 items listable</dt>
+        <dd>{% if report.listed_count is not None %}{{ report.listed_count }}{% else %}(none){% endif %}</dd>
+        <dt>Quantity 0 on page 1</dt>
+        <dd>{% if report.zero_quantity_count is not None %}{{ report.zero_quantity_count }}{% else %}(none){% endif %}</dd>
+        <dt>Cached public items</dt>
+        <dd>{% if report.fresh_cache.present %}{{ report.fresh_cache.item_count }}{% else %}no fresh snapshot{% endif %}</dd>
+        <dt>Last-good cached items</dt>
+        <dd>{% if report.last_good_cache.present %}{{ report.last_good_cache.item_count }}{% else %}none{% endif %}</dd>
+      </dl>
+
+      <p class="inv-check"><a class="inv-check-button" href="{% url 'public:inventory_connection_check' %}">Run again</a></p>
+      <p><a class="inv-clear" href="{% url 'public:inventory' %}">Back to inventory</a></p>
+    </div>
+  </main>
+{% endblock %}

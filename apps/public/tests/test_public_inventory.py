@@ -2,8 +2,9 @@ import urllib.parse
 from datetime import datetime
 from unittest.mock import patch
 
+from django.contrib.auth.models import User
 from django.core.cache import cache
-from django.test import Client, SimpleTestCase, override_settings
+from django.test import Client, SimpleTestCase, TestCase, override_settings
 from django.utils import timezone
 
 from apps.public.inventory_presenters import present_public_inventory_item
@@ -15,6 +16,7 @@ from apps.public.inventory_service import (
     get_public_inventory_snapshot,
 )
 from apps.supplier_portal.statzweb_client import (
+    StatzWebHTTPError,
     StatzWebNotConfigured,
     StatzWebUnavailable,
     _canonical_string,
@@ -444,3 +446,82 @@ class PublicInventoryViewTests(PublicInventoryTestCase):
             stale,
             'Our inventory listing is temporarily unavailable. Please contact us for current availability.',
         )
+
+
+@override_settings(CACHES=LOC_MEM)
+class InventoryConnectionCheckTests(TestCase):
+    def setUp(self):
+        super().setUp()
+        cache.clear()
+        self.staff = User.objects.create_user(
+            'inv-staff',
+            'inv-staff@example.com',
+            'unused-test-password',
+            is_staff=True,
+        )
+
+    @patch('apps.public.inventory_service.fetch_public_inventory_page', side_effect=StatzWebUnavailable('URLError'))
+    def test_anonymous_gets_403_and_no_button(self, _fetch):
+        listing = self.client.get('/inventory/')
+        self.assertNotContains(listing, 'Check inventory connection')
+        denied = self.client.get('/inventory/connection-check/')
+        self.assertEqual(denied.status_code, 403)
+
+    @patch('apps.public.inventory_service.fetch_public_inventory_page')
+    def test_staff_sees_the_button(self, fetch):
+        fetch.side_effect = StatzWebUnavailable('URLError')
+        self.client.force_login(self.staff)
+        response = self.client.get('/inventory/')
+        self.assertContains(response, 'Check inventory connection')
+        self.assertContains(response, 'href="/inventory/connection-check/"')
+
+    @override_settings(
+        INVENTORY_API_BASE_URL='',
+        INVENTORY_API_KEY='',
+        INVENTORY_API_HMAC_SECRET='',
+    )
+    @patch('apps.public.inventory_diagnostics.fetch_public_inventory_page')
+    def test_empty_settings_explain_the_failure_without_a_call(self, fetch):
+        self.client.force_login(self.staff)
+        response = self.client.get('/inventory/connection-check/')
+        self.assertContains(response, 'INVENTORY_API_BASE_URL is empty')
+        self.assertContains(response, 'INVENTORY_API_KEY is empty')
+        self.assertContains(response, 'INVENTORY_API_HMAC_SECRET is empty')
+        self.assertContains(response, 'The inventory API was not called.')
+        fetch.assert_not_called()
+
+    @override_settings(
+        INVENTORY_API_BASE_URL='https://inventory.example/api/supplier-portal/v1/',
+        INVENTORY_API_KEY='inventory-key',
+        INVENTORY_API_HMAC_SECRET='inventory-secret',
+    )
+    @patch('apps.public.inventory_diagnostics.fetch_public_inventory_page')
+    def test_wrong_path_is_reported_without_a_call(self, fetch):
+        self.client.force_login(self.staff)
+        response = self.client.get('/inventory/connection-check/')
+        self.assertContains(response, '/api/inventory/v1/')
+        self.assertContains(response, 'The inventory API was not called.')
+        fetch.assert_not_called()
+
+    @override_settings(
+        INVENTORY_API_BASE_URL='https://inventory.example/api/inventory/v1/',
+        INVENTORY_API_KEY='super-secret-key-value',
+        INVENTORY_API_HMAC_SECRET='super-secret-hmac-value',
+        SUPPLIER_PORTAL_API_KEY='super-secret-key-value',
+        SUPPLIER_PORTAL_HMAC_SECRET='other-supplier-secret',
+    )
+    @patch('apps.public.inventory_diagnostics.fetch_public_inventory_page')
+    def test_http_401_and_shared_key_never_render_secrets(self, fetch):
+        fetch.side_effect = StatzWebHTTPError(
+            status=401,
+            request_url='https://inventory.example/api/inventory/v1/items/?page=1',
+            method='GET',
+            path='/api/inventory/v1/items/',
+        )
+        self.client.force_login(self.staff)
+        response = self.client.get('/inventory/connection-check/')
+        self.assertContains(response, 'STATZWeb rejected the signature')
+        self.assertContains(response, 'INVENTORY_API_KEY is the same value as SUPPLIER_PORTAL_API_KEY')
+        self.assertNotContains(response, 'super-secret-key-value')
+        self.assertNotContains(response, 'super-secret-hmac-value')
+        self.assertNotContains(response, 'other-supplier-secret')

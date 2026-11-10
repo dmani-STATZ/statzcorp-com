@@ -2239,3 +2239,62 @@ body.login .statz-admin-auth #login-form {
   font-size: 13px;
   line-height: 1.6;
 }
+
+.inv-check {
+  margin: 0 0 18px;
+}
+
+.inv-check-button {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius);
+  background: var(--gray-light);
+  color: var(--navy);
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.inv-check-banner,
+.inv-check-summary {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--gray-light);
+  color: var(--navy);
+  line-height: 1.6;
+}
+
+.inv-check-summary--ok {
+  border-left-color: var(--primary);
+}
+
+.inv-check-problems {
+  margin: 0 0 18px;
+  padding-left: 18px;
+  color: var(--navy);
+  line-height: 1.6;
+}
+
+.inv-check-details {
+  display: grid;
+  grid-template-columns: minmax(12rem, 18rem) 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.inv-check-details dt {
+  color: var(--gray-mid);
+  font-weight: 700;
+}
+
+.inv-check-details dd {
+  margin: 0;
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
