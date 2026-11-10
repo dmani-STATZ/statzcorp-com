@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Inventory | STATZ Corporation{% endblock %}
+{% block meta_description %}View-only listing of parts currently in stock at STATZ Corporation.{% endblock %}
+
+{% block banner %}
+  <section id="inner-header">
+    <div class="container">
+      <h2>Available Inventory</h2>
+      <p>View-only listing of parts currently in stock. Contact us for pricing and availability.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block breadcrumb %}
+  <section id="breadcrumb-sec">
+    <div class="container">
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <ul>
+          <li><a href="{% url 'public:index' %}">Home</a></li>
+          <li>Inventory</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="title-sec">
+      <h6>Your Friendly and Knowledgeable SDVOSB Dealer</h6>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <main class="page-content">
+    <div class="container">
+      {% if not snapshot_available %}
+        <p class="inv-status">Our inventory listing is temporarily unavailable. Please contact us for current availability.</p>
+        <a class="inv-quote" href="{{ contact_url }}">Request a Quote</a>
+      {% else %}
+        <form class="inv-search" method="get" action="{% url 'public:inventory' %}">
+          <label for="inventory-q">Search inventory</label>
+          <input id="inventory-q" type="text" name="q" value="{{ q }}" maxlength="100">
+          <button type="submit">Search</button>
+        </form>
+
+        {% if snapshot_is_stale %}
+          <p class="inv-notice">Showing the most recent available listing; it may be out of date.</p>
+        {% endif %}
+
+        {% if total_count %}
+          <div class="inv-table-wrap">
+            <table class="inv-table">
+              <thead>
+                <tr>
+                  <th scope="col">NSN</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Part Number</th>
+                  <th scope="col">Mfr / CAGE</th>
+                  <th scope="col">Qty Available</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in page_obj %}
+                  <tr>
+                    <td class="inv-nsn">{% if item.nsn_display %}{{ item.nsn_display }}{% else %}—{% endif %}</td>
+                    <td>{% if item.description %}{{ item.description }}{% else %}—{% endif %}</td>
+                    <td>{% if item.part_number %}{{ item.part_number }}{% else %}—{% endif %}</td>
+                    <td>{% if item.manufacturer %}{{ item.manufacturer }}{% else %}—{% endif %}</td>
+                    <td class="inv-qty">{{ item.quantity }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% if page_obj.paginator.num_pages > 1 %}
+            <nav class="inv-pager" aria-label="Inventory pages">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&amp;q={{ q|urlencode }}">Previous</a>
+              {% endif %}
+              <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&amp;q={{ q|urlencode }}">Next</a>
+              {% endif %}
+            </nav>
+          {% endif %}
+        {% elif q %}
+          <p class="inv-empty">No items match your search.</p>
+          <a class="inv-clear" href="{% url 'public:inventory' %}">Clear search</a>
+        {% else %}
+          <p class="inv-empty">No items are currently listed.</p>
+        {% endif %}
+
+        {% if fetched_at %}
+          <p class="inv-refreshed">Listing refreshed {{ fetched_at|date:"M j, Y g:i A" }}. Quantities are subject to prior sale; please contact us to confirm availability.</p>
+        {% endif %}
+        <a class="inv-quote" href="{{ contact_url }}">Request a Quote</a>
+      {% endif %}
+    </div>
+  </main>
+{% endblock %}

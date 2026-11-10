@@ -246,3 +246,85 @@ def send_email(to, subject, body_html):
     if status != 200 or not data.get('ok'):
         raise StatzWebUnavailable(f"send-email did not confirm success: {data}")
     return True
+
+
+# Inventory API client. Lives here to share the audited _canonical_string/_sign helpers.
+def fetch_public_inventory_page(page: int, page_size: int = 200) -> dict:
+    base_url = settings.INVENTORY_API_BASE_URL
+    api_key = settings.INVENTORY_API_KEY
+    secret = settings.INVENTORY_API_HMAC_SECRET
+    if not (base_url and api_key and secret):
+        raise StatzWebNotConfigured(
+            "Inventory API is not configured — set INVENTORY_API_BASE_URL, "
+            "INVENTORY_API_KEY, and INVENTORY_API_HMAC_SECRET."
+        )
+
+    base = base_url.rstrip('/')
+    if urllib.parse.urlparse(base).path != '/api/inventory/v1':
+        raise StatzWebNotConfigured(
+            "INVENTORY_API_BASE_URL path must be /api/inventory/v1."
+        )
+
+    full_url = base + '/items/'
+    signed_path = urllib.parse.urlparse(full_url).path
+    if signed_path != '/api/inventory/v1/items/':
+        raise StatzWebNotConfigured(
+            "INVENTORY_API_BASE_URL path must be /api/inventory/v1."
+        )
+    full_url = full_url + '?' + urllib.parse.urlencode({'page': page, 'page_size': page_size})
+
+    method = 'GET'
+    body_bytes = b''
+    timeout = DEFAULT_TIMEOUT
+
+    timestamp = str(int(time.time()))
+    signature = _sign(secret, _canonical_string('GET', signed_path, timestamp, ''))
+
+    req = urllib.request.Request(
+        full_url,
+        data=body_bytes if method.upper() != 'GET' else None,
+        method=method,
+    )
+    req.add_header('X-API-Key', api_key)
+    req.add_header('X-Timestamp', timestamp)
+    req.add_header('X-Signature', signature)
+    req.add_header('Accept', 'application/json')
+    req.add_header('User-Agent', 'statzcorp-com/1.0 (+supplier-portal-client)')
+    if body_bytes:
+        req.add_header('Content-Type', 'application/json')
+
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = resp.read()
+            try:
+                data = json.loads(raw) if raw else {}
+            except json.JSONDecodeError as exc:
+                raise StatzWebUnavailable(type(exc).__name__) from exc
+            if not isinstance(data, dict):
+                raise StatzWebUnavailable('ValueError')
+            if resp.status != 200:
+                raise StatzWebHTTPError(
+                    status=resp.status,
+                    request_url=full_url,
+                    content_type='',
+                    body_snippet='',
+                    error_code=None,
+                    error_message=None,
+                    method=method.upper(),
+                    path=signed_path,
+                )
+            return data
+    except urllib.error.HTTPError as exc:
+        exc.read(_MAX_ERROR_BODY_BYTES)
+        raise StatzWebHTTPError(
+            status=exc.code,
+            request_url=full_url,
+            content_type='',
+            body_snippet='',
+            error_code=None,
+            error_message=None,
+            method=method.upper(),
+            path=signed_path,
+        ) from exc
+    except urllib.error.URLError as exc:
+        raise StatzWebUnavailable(type(exc).__name__) from exc

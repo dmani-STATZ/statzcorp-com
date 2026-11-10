@@ -1,5 +1,9 @@
 # STATZ Corporation Website — Release Notes
 
+## 2026-11-10
+### Added
+- Public Inventory listing at /inventory/: view-only, search, pagination; data from STATZWeb items marked Show on public website; refreshes every 15 minutes.
+
 ## 2026-09-10
 ### Added
 - The Contact Us form now includes a human verification check to reduce unwanted automated messages.

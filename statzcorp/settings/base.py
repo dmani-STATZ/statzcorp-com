@@ -184,6 +184,14 @@ SUPPLIER_PORTAL_API_BASE_URL = config('SUPPLIER_PORTAL_API_BASE_URL', default=''
 SUPPLIER_PORTAL_API_KEY = config('SUPPLIER_PORTAL_API_KEY', default='')
 SUPPLIER_PORTAL_HMAC_SECRET = config('SUPPLIER_PORTAL_HMAC_SECRET', default='')
 
+# ── Public inventory → STATZWeb Inventory API ────────────────────────────────
+# Independent of the Supplier Portal settings above. Do not derive one base URL
+# from the other. INVENTORY_API_BASE_URL is the full base, including
+# /api/inventory/v1/. Contract: docs/inventory-api-contract.md
+INVENTORY_API_BASE_URL = config('INVENTORY_API_BASE_URL', default='')
+INVENTORY_API_KEY = config('INVENTORY_API_KEY', default='')
+INVENTORY_API_HMAC_SECRET = config('INVENTORY_API_HMAC_SECRET', default='')
+
 # ── Logging ───────────────────────────────────────────────────────────────────
 LOGGING = {
     'version': 1,

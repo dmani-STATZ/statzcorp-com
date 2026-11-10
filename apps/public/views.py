@@ -1,5 +1,9 @@
+from django.core.paginator import Paginator
 from django.db.models import Prefetch
+from django.urls import reverse
 from django.views.generic import TemplateView
+
+from apps.public.inventory_service import get_public_inventory_snapshot
 
 from .models import HeroSlide, TeamGroup, TeamMember, TeamPageBanner
 
@@ -40,3 +44,47 @@ class AccreditationsView(TemplateView):
 
 class ResourcesView(TemplateView):
     template_name = 'public/resources.html'
+
+
+def _digits(value):
+    return ''.join(ch for ch in value if ch.isdigit())
+
+
+def _inventory_item_matches(item, q_lower, q_digits):
+    haystacks = (
+        item.get('description', ''),
+        item.get('part_number', ''),
+        item.get('manufacturer', ''),
+        item.get('nsn_display', ''),
+    )
+    if any(q_lower in str(value).lower() for value in haystacks):
+        return True
+    return len(q_digits) >= 4 and q_digits in str(item.get('nsn_digits', ''))
+
+
+class PublicInventoryListView(TemplateView):
+    http_method_names = ['get']
+    template_name = 'public/inventory_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        q = self.request.GET.get('q', '')
+        q = q.strip()[:100]
+        snapshot = get_public_inventory_snapshot()
+        items = snapshot.items
+        if q:
+            q_lower = q.lower()
+            q_digits = _digits(q)
+            items = [
+                item for item in items
+                if _inventory_item_matches(item, q_lower, q_digits)
+            ]
+        paginator = Paginator(items, 25)
+        context['page_obj'] = paginator.get_page(self.request.GET.get('page'))
+        context['q'] = q
+        context['total_count'] = len(items)
+        context['snapshot_available'] = snapshot.available
+        context['snapshot_is_stale'] = snapshot.is_stale
+        context['fetched_at'] = snapshot.fetched_at
+        context['contact_url'] = reverse('contact:contact_us')
+        return context
