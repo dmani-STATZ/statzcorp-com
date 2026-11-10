@@ -468,12 +468,15 @@ class InventoryConnectionCheckTests(TestCase):
         self.assertEqual(denied.status_code, 403)
 
     @patch('apps.public.inventory_service.fetch_public_inventory_page')
-    def test_staff_sees_the_button(self, fetch):
+    def test_staff_listing_has_no_check_button_but_check_page_still_works(self, fetch):
         fetch.side_effect = StatzWebUnavailable('URLError')
         self.client.force_login(self.staff)
         response = self.client.get('/inventory/')
-        self.assertContains(response, 'Check inventory connection')
-        self.assertContains(response, 'href="/inventory/connection-check/"')
+        self.assertNotContains(response, 'Check inventory connection')
+        with patch('apps.public.inventory_diagnostics.fetch_public_inventory_page') as probe:
+            probe.side_effect = StatzWebUnavailable('URLError')
+            check = self.client.get('/inventory/connection-check/')
+        self.assertEqual(check.status_code, 200)
 
     @override_settings(
         INVENTORY_API_BASE_URL='',
