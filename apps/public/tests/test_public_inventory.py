@@ -345,6 +345,8 @@ class PublicInventoryViewTests(PublicInventoryTestCase):
         self.assertContains(response, 'Bolt &lt;script&gt;alert(1)&lt;/script&gt;')
         self.assertNotContains(response, '999999.99')
         self.assertNotContains(response, 'BIN-SECRET')
+        self.assertNotContains(response, 'Mfr / CAGE')
+        self.assertNotContains(response, 'ACME')
         self.assertNotContains(response, '424242')
         self.assertNotContains(response, '<script>alert(1)</script>')
         posted = self.client.post('/inventory/')
@@ -394,6 +396,10 @@ class PublicInventoryViewTests(PublicInventoryTestCase):
         brass = self.client.get('/inventory/', {'q': 'brass'})
         self.assertContains(brass, 'Brass Fitting')
         self.assertNotContains(brass, 'Copper Washer')
+
+        by_manufacturer = self.client.get('/inventory/', {'q': 'ACME'})
+        self.assertNotContains(by_manufacturer, 'Brass Fitting')
+        self.assertContains(by_manufacturer, 'No items match your search.')
 
         nsn = self.client.get('/inventory/', {'q': '1560002'})
         self.assertContains(nsn, 'Brass Fitting')

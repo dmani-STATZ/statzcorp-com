@@ -53,7 +53,6 @@
                   <th scope="col">NSN</th>
                   <th scope="col">Description</th>
                   <th scope="col">Part Number</th>
-                  <th scope="col">Mfr / CAGE</th>
                   <th scope="col">Qty Available</th>
                 </tr>
               </thead>
@@ -63,7 +62,6 @@
                     <td class="inv-nsn">{% if item.nsn_display %}{{ item.nsn_display }}{% else %}—{% endif %}</td>
                     <td>{% if item.description %}{{ item.description }}{% else %}—{% endif %}</td>
                     <td>{% if item.part_number %}{{ item.part_number }}{% else %}—{% endif %}</td>
-                    <td>{% if item.manufacturer %}{{ item.manufacturer }}{% else %}—{% endif %}</td>
                     <td class="inv-qty">{{ item.quantity }}</td>
                   </tr>
                 {% endfor %}

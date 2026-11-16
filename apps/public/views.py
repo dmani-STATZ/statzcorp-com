@@ -56,7 +56,6 @@ def _inventory_item_matches(item, q_lower, q_digits):
     haystacks = (
         item.get('description', ''),
         item.get('part_number', ''),
-        item.get('manufacturer', ''),
         item.get('nsn_display', ''),
     )
     if any(q_lower in str(value).lower() for value in haystacks):
